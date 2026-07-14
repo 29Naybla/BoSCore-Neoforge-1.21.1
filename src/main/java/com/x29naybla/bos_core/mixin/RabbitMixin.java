@@ -35,19 +35,19 @@ public abstract class RabbitMixin extends Animal implements RabbitMixinAccess {
 
     @Inject(at= {@At("TAIL")}, method = {"finalizeSpawn"})
     private void bos_finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir){
-        if(level.getBiome(this.blockPosition()).is(BoSTags.Biomes.SPAWNS_FLUFFY_RABBITS)){
+        if(level.getBiome(this.getOnPos()).is(BoSTags.Biomes.SPAWNS_FLUFFY_RABBITS)){
             bos_setFluffy(true);
         }
     }
 
     @ModifyReturnValue(at= {@At(value = "TAIL")}, method = "getBreedOffspring(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/AgeableMob;)Lnet/minecraft/world/entity/animal/Rabbit;")
-    private Rabbit bos_bredRabbitIsFluffy(Rabbit original, ServerLevel serverLevel, AgeableMob ageableMob) {
-        if(original != null){
-            if(serverLevel.getBiome(original.getOnPos()).is(BoSTags.Biomes.SPAWNS_FLUFFY_RABBITS)){
-               ((RabbitMixinAccess) original).bos_setFluffy(true);
+    private Rabbit bos_bredRabbitIsFluffy(Rabbit babyRabbit, ServerLevel serverLevel, AgeableMob otherParent) {
+        if(babyRabbit != null){
+            if(serverLevel.getBiome(this.getOnPos()).is(BoSTags.Biomes.SPAWNS_FLUFFY_RABBITS)){
+               ((RabbitMixinAccess) babyRabbit).bos_setFluffy(true);
             }
         }
-        return original;
+        return babyRabbit;
     }
 
     @Inject(at= {@At("TAIL")}, method = {"defineSynchedData"})
