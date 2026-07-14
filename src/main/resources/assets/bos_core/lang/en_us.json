@@ -1,0 +1,9 @@
+{
+  "box_of_snails.configuration.title": "BoS Core Configs",
+  "box_of_snails.configuration.section.bos_core.common.toml": "BoS Core Configs",
+  "box_of_snails.configuration.section.bos_core.common.toml.title": "BoS Core Configs",
+  "box_of_snails.configuration.items": "Item List",
+  "box_of_snails.configuration.logDirtBlock": "Log Dirt Block",
+  "box_of_snails.configuration.magicNumberIntroduction": "Magic Number Text",
+  "box_of_snails.configuration.magicNumber": "Magic Number"
+}

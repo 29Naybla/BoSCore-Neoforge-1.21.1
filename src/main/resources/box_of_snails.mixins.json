@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.x29naybla.bos_core.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "RabbitMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
