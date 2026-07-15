@@ -3,6 +3,7 @@
   "package": "com.x29naybla.bos_core.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ItemFrameMixin",
     "NoiseChunkGeneratorMixin",
     "RabbitMixin"
   ],

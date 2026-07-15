@@ -3,24 +3,18 @@ package com.x29naybla.bos_core.common;
 import com.x29naybla.bos_core.BoSCore;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
-import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
-import java.util.List;
-
-//@EventBusSubscriber(modid = BoSCore.MODID)
+@EventBusSubscriber(modid = BoSCore.MODID)
 public class BoSEvents {
 
-    /*
+
     @SubscribeEvent
     public static void mapPlacement(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getEntity();
@@ -45,7 +39,7 @@ public class BoSEvents {
                     itemFrame.setPos(event.getPos().getX()+1, event.getPos().getY(), event.getPos().getZ());
                 } else return;
 
-                player.swing(event.getHand());
+                player.swing(event.getHand(), true);
                 if(!player.isCreative()) player.getItemInHand(event.getHand()).shrink(1);
                 serverLevel.addFreshEntity(itemFrame);
             }
@@ -63,13 +57,4 @@ public class BoSEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void mapHurt(AttackEntityEvent event){
-        if(event.getTarget() instanceof ItemFrame itemFrame && itemFrame.hasFramedMap()){
-            itemFrame.playSound(itemFrame.getRemoveItemSound(), 1.0F, 1.0F);
-            itemFrame.spawnAtLocation(itemFrame.getItem());
-            itemFrame.kill();
-        }
-    }
-     */
 }
