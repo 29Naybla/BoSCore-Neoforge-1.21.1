@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Rabbit.class)
 public abstract class RabbitMixin extends Animal implements RabbitMixinAccess {
     @Unique
-    private static final EntityDataAccessor<Boolean> IS_FLUFFY = SynchedEntityData.defineId(Rabbit.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_FLUFFY = SynchedEntityData.defineId(RabbitMixin.class, EntityDataSerializers.BOOLEAN);
 
     protected RabbitMixin(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
