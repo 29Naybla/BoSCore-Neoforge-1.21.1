@@ -14,7 +14,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod(BoSCore.MODID)
 public class BoSCore {
-    public static final String MODID = "box_of_snails";
+    public static final String MODID = "bos_core";
 
     public BoSCore(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.register(this);
