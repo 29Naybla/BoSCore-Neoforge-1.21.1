@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/dirt_path",
+  "textures": {
+    "particle": "minecraft:block/snow",
+    "top": "bos_core:block/snow_path",
+    "side": "minecraft:block/snow",
+    "bottom": "minecraft:block/snow"
+  }
+}

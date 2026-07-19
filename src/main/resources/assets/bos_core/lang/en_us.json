@@ -1,9 +1,15 @@
 {
-  "box_of_snails.configuration.title": "BoS Core Configs",
-  "box_of_snails.configuration.section.bos_core.common.toml": "BoS Core Configs",
-  "box_of_snails.configuration.section.bos_core.common.toml.title": "BoS Core Configs",
-  "box_of_snails.configuration.items": "Item List",
-  "box_of_snails.configuration.logDirtBlock": "Log Dirt Block",
-  "box_of_snails.configuration.magicNumberIntroduction": "Magic Number Text",
-  "box_of_snails.configuration.magicNumber": "Magic Number"
+  "block.bos_core.sand_path": "Sand Path",
+  "block.bos_core.red_sand_path": "Red Sand Path",
+  "block.bos_core.snow_path": "Snow Path",
+  "block.bos_core.mud_path": "Mud Path",
+  "block.bos_core.gravel_path": "Gravel Path",
+
+  "bos_core.configuration.title": "BoS Core Configs",
+  "bos_core.configuration.section.bos_core.common.toml": "BoS Core Configs",
+  "bos_core.configuration.section.bos_core.common.toml.title": "BoS Core Configs",
+  "bos_core.configuration.items": "Item List",
+  "bos_core.configuration.logDirtBlock": "Log Dirt Block",
+  "bos_core.configuration.magicNumberIntroduction": "Magic Number Text",
+  "bos_core.configuration.magicNumber": "Magic Number"
 }

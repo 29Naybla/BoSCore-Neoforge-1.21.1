@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "bos_core:block/sand_path"
+      },
+      {
+        "model": "bos_core:block/sand_path",
+        "y": 90
+      },
+      {
+        "model": "bos_core:block/sand_path",
+        "y": 180
+      },
+      {
+        "model": "bos_core:block/sand_path",
+        "y": 270
+      }
+    ]
+  }
+}
