@@ -3,6 +3,7 @@
   "package": "com.x29naybla.bos_core.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CustomNameVisibleMixin",
     "NoiseChunkGeneratorMixin",
     "RabbitMixin"
   ],
@@ -13,6 +14,7 @@
     "requireAnnotations": true
   },
   "client": [
+    "GameRenderedMixin",
     "RabbitRendererMixin"
   ]
 }
