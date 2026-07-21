@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.nio.file.Path;
 
 @Mixin(GameRenderer.class)
-public abstract class GameRenderedMixin implements AutoCloseable {
+public abstract class GameRendererMixin implements AutoCloseable {
 
     @Shadow
     public abstract Minecraft getMinecraft();

@@ -14,7 +14,7 @@
     "requireAnnotations": true
   },
   "client": [
-    "GameRenderedMixin",
+    "GameRendererMixin",
     "RabbitRendererMixin"
   ]
 }
