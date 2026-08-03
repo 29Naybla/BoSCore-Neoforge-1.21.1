@@ -7,21 +7,27 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber(modid = BoSCore.MODID)
 public class BoSEvents {
+    public static final int DEFAULT_NAME_TAG_ITEM_COLOR = 14927242;
+    public static final int DEFAULT_NAME_COLOR = FastColor.ARGB32.color(255, 255, 255);
 
     @SubscribeEvent
     public static void pathMaking(PlayerInteractEvent.RightClickBlock event){
@@ -48,6 +54,12 @@ public class BoSEvents {
         player.swing(player.getUsedItemHand());
         player.getItemInHand(player.getUsedItemHand()).hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
         player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
+    }
+
+    @SubscribeEvent
+    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(stack, DEFAULT_NAME_TAG_ITEM_COLOR)),
+                Items.NAME_TAG);
     }
 
     @SubscribeEvent

@@ -3,9 +3,12 @@
   "package": "com.x29naybla.bos_core.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CatMixin",
     "CustomNameVisibleMixin",
+    "NameTagItemMixin",
     "NoiseChunkGeneratorMixin",
-    "RabbitMixin"
+    "RabbitMixin",
+    "WolfMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -14,7 +17,9 @@
     "requireAnnotations": true
   },
   "client": [
+    "CatRendererMixin",
     "GameRendererMixin",
-    "RabbitRendererMixin"
+    "RabbitRendererMixin",
+    "WolfRendererMixin"
   ]
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bos_core:item/name_tag",
+    "layer1": "bos_core:item/name_tag_overlay"
+  }
+}
