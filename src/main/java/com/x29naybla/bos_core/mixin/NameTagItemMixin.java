@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
-import static com.x29naybla.bos_core.common.BoSEvents.DEFAULT_NAME_COLOR;
+import static com.x29naybla.bos_core.BoSEvents.DEFAULT_NAME_COLOR;
 
 @Mixin(NameTagItem.class)
 public abstract class NameTagItemMixin extends Item {

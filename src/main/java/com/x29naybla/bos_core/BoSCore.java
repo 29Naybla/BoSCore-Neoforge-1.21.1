@@ -3,6 +3,7 @@ package com.x29naybla.bos_core;
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import com.x29naybla.bos_core.common.registry.BoSItems;
 
+import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -21,6 +22,7 @@ public class BoSCore {
 
         BoSItems.register(modEventBus);
         BoSBlocks.register(modEventBus);
+        BoSRecipes.RECIPE_SERIALIZERS.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

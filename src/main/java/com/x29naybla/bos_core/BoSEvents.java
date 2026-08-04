@@ -1,6 +1,5 @@
-package com.x29naybla.bos_core.common;
+package com.x29naybla.bos_core;
 
-import com.x29naybla.bos_core.BoSCore;
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
