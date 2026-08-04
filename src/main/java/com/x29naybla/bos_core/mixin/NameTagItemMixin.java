@@ -38,8 +38,6 @@ public abstract class NameTagItemMixin extends Item {
     private void bos_interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir){
         if (!(target instanceof Player)) {
             if (!player.level().isClientSide() && target.isAlive()) {
-                target.setCustomName(bos_getNewName(stack, target));
-
                 if (target instanceof Mob) {
                     ((Mob) target).setPersistenceRequired();
                 }
@@ -50,11 +48,26 @@ public abstract class NameTagItemMixin extends Item {
                     ((LeatherCollarMixinAccess) cat).bos_setLeatherCollarColor(Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb());
                 }
 
-                stack.shrink(1);
+                if(target.hasCustomName()){
+                    if(!Objects.requireNonNull(target.getCustomName()).getString().equals(stack.getHoverName().getString())
+                            || Objects.requireNonNull(target.getCustomName().getStyle().getColor()).getValue() != Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb()) {
+                        stack.shrink(1);
+                        target.setCustomName(bos_getNewName(stack, target));
+
+                        cir.setReturnValue(InteractionResult.SUCCESS);
+                        return;
+                    } else {
+                        cir.setReturnValue(InteractionResult.PASS);
+                    }
+                } else if (stack.has(DataComponents.CUSTOM_NAME)) {
+                    stack.shrink(1);
+                    target.setCustomName(bos_getNewName(stack, target));
+
+                    cir.setReturnValue(InteractionResult.SUCCESS);
+                    return;
+                }
+
             }
-            cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide()));
-            cir.cancel();
-            return;
         }
         cir.setReturnValue(InteractionResult.PASS);
         cir.cancel();
