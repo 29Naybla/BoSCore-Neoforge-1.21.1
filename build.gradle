@@ -66,6 +66,13 @@ runs {
         systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
     }
 
+    loggedClient {
+        run 'client'
+        devLogin {
+            enabled true
+        }
+    }
+
     server {
         systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         argument '--nogui'
