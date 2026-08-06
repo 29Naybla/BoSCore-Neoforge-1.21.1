@@ -6,7 +6,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Ocelot;
@@ -59,11 +61,45 @@ public abstract class OcelotMixin extends Animal {
     @Unique
     private void bos_tryToTame(Player player) {
         if (this.random.nextInt(3) == 0  && !net.neoforged.neoforge.event.EventHooks.onAnimalTame(this, player)) {
-            Cat cat = this.convertTo(EntityType.CAT, true);
+            Cat cat = EntityType.CAT.create(this.level());
+
             if (cat != null) {
-                cat.tame(player);
-                BuiltInRegistries.CAT_VARIANT.getRandom(random).ifPresent(cat::setVariant);
+                cat.copyPosition(this);
+                cat.setBaby(this.isBaby());
+                cat.setNoAi(this.isNoAi());
+                if (this.hasCustomName()) {
+                    cat.setCustomName(this.getCustomName());
+                    cat.setCustomNameVisible(this.isCustomNameVisible());
+                }
+
+                if (this.isPersistenceRequired()) {
+                    cat.setPersistenceRequired();
+                }
+
+                cat.setInvulnerable(this.isInvulnerable());
+                cat.setCanPickUpLoot(this.canPickUpLoot());
+
+                for (EquipmentSlot equipmentslot : EquipmentSlot.values()) {
+                    ItemStack itemstack = this.getItemBySlot(equipmentslot);
+                    if (!itemstack.isEmpty()) {
+                        cat.setItemSlot(equipmentslot, itemstack.copyAndClear());
+                        cat.setDropChance(equipmentslot, this.getEquipmentDropChance(equipmentslot));
+                    }
+                }
                 cat.setOrderedToSit(true);
+                BuiltInRegistries.CAT_VARIANT.getRandom(random).ifPresent(cat::setVariant);
+
+                this.level().addFreshEntity(cat);
+                if (this.isPassenger()) {
+                    Entity entity = this.getVehicle();
+                    if (entity != null) {
+                        this.stopRiding();
+                        cat.startRiding(entity, true);
+                    }
+                }
+
+                this.discard();
+                cat.tame(player);
                 cat.level().broadcastEntityEvent(cat, (byte) 7);
             }
         } else {

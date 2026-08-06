@@ -1,7 +1,7 @@
 package com.x29naybla.bos_core.common.registry;
 
 import com.x29naybla.bos_core.BoSCore;
-import com.x29naybla.bos_core.common.block.BoSPathBlock;
+import com.x29naybla.bos_core.common.block.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +26,13 @@ public class BoSBlocks {
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MUD), Blocks.MUD.defaultBlockState()));
     public static final DeferredBlock<Block> GRAVEL_PATH = registerBlock("gravel_path",
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL), Blocks.GRAVEL.defaultBlockState()));
+
+    public static final DeferredBlock<Block> PUMPKIN_PIE = registerBlock("pumpkin_pie",
+            () -> new PumpkinPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
+    public static final DeferredBlock<Block> MEAT_PIE = registerBlock("meat_pie",
+            () -> new MeatPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
+    public static final DeferredBlock<Block> APPLE_PIE = registerBlock("apple_pie",
+            () -> new ApplePieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block){
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);

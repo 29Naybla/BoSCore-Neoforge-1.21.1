@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "minecraft:sugar"
+    },
+    "p": {
+      "item": "minecraft:pumpkin"
+    },
+    "w": {
+      "item": "minecraft:wheat"
+    },
+    "e": {
+      "tag": "c:eggs"
+    }
+  },
+  "pattern": [
+    "sps",
+    "wew",
+    "www"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:pumpkin_pie"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "minecraft:sugar"
+    },
+    "a": {
+      "item": "minecraft:apple"
+    },
+    "w": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "wsw",
+    "www"
+  ],
+  "result": {
+    "count": 1,
+    "id": "bos_core:apple_pie"
+  }
+}

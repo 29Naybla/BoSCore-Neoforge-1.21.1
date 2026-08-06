@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "m": {
+      "tag": "c:foods/cooked_meat"
+    },
+    "w": {
+      "item": "minecraft:wheat"
+    },
+    "p": {
+      "item": "minecraft:baked_potato"
+    }
+  },
+  "pattern": [
+    "mmm",
+    "wpw",
+    "www"
+  ],
+  "result": {
+    "count": 1,
+    "id": "bos_core:meat_pie"
+  }
+}
