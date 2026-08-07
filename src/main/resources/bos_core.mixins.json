@@ -21,6 +21,7 @@
   },
   "client": [
     "CatCollarLayerMixin",
+    "CatRendererMixin",
     "GameRendererMixin",
     "RabbitRendererMixin",
     "WolfCollarLayerMixin"
