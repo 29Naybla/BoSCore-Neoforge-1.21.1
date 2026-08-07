@@ -3,6 +3,7 @@
   "package": "com.x29naybla.bos_core.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AnvilMenuMixin",
     "CatMixin",
     "CustomNameVisibleMixin",
     "NameTagItemMixin",
@@ -19,9 +20,9 @@
     "requireAnnotations": true
   },
   "client": [
-    "CatRendererMixin",
+    "CatCollarLayerMixin",
     "GameRendererMixin",
     "RabbitRendererMixin",
-    "WolfRendererMixin"
+    "WolfCollarLayerMixin"
   ]
 }

@@ -1,0 +1,7 @@
+{
+	"parent": "bos_core:block/base_pie_slice1",
+	"textures": {
+		"top": "bos_core:block/berry_pie_top",
+		"inside": "bos_core:block/berry_pie_inner"
+	}
+}

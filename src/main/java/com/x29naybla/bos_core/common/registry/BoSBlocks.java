@@ -33,6 +33,8 @@ public class BoSBlocks {
             () -> new MeatPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
     public static final DeferredBlock<Block> APPLE_PIE = registerBlock("apple_pie",
             () -> new ApplePieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
+    public static final DeferredBlock<Block> BERRY_PIE = registerBlock("berry_pie",
+            () -> new BerryPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block){
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);

@@ -18,11 +18,11 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(WolfCollarLayer.class)
-public abstract class WolfRendererMixin extends RenderLayer<Wolf, WolfModel<Wolf>>{
+public abstract class WolfCollarLayerMixin extends RenderLayer<Wolf, WolfModel<Wolf>>{
     @Shadow
     private static final ResourceLocation WOLF_COLLAR_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/wolf/wolf_collar.png");
 
-    public WolfRendererMixin(RenderLayerParent<Wolf, WolfModel<Wolf>> renderer) {
+    public WolfCollarLayerMixin(RenderLayerParent<Wolf, WolfModel<Wolf>> renderer) {
         super(renderer);
     }
 

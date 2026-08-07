@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.*;
 
 @Mixin(CatCollarLayer.class)
-public abstract class CatRendererMixin extends RenderLayer<Cat, CatModel<Cat>> {
+public abstract class CatCollarLayerMixin extends RenderLayer<Cat, CatModel<Cat>> {
     @Shadow
     private static final ResourceLocation CAT_COLLAR_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/cat/cat_collar.png");
     @Mutable
@@ -23,7 +23,7 @@ public abstract class CatRendererMixin extends RenderLayer<Cat, CatModel<Cat>> {
     @Shadow
     private final CatModel<Cat> catModel;
 
-    public CatRendererMixin(RenderLayerParent<Cat, CatModel<Cat>> renderer, EntityModelSet modelSet) {
+    public CatCollarLayerMixin(RenderLayerParent<Cat, CatModel<Cat>> renderer, EntityModelSet modelSet) {
         super(renderer);
         this.catModel = new CatModel<>(modelSet.bakeLayer(ModelLayers.CAT_COLLAR));
     }

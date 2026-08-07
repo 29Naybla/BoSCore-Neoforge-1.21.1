@@ -70,8 +70,9 @@ public class BoSEvents {
             event.insertAfter(Blocks.MUD.asItem().getDefaultInstance(), BoSBlocks.MUD_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.GRAVEL.asItem().getDefaultInstance(), BoSBlocks.GRAVEL_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }else if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS){
-            event.insertAfter(Items.PUMPKIN_PIE.getDefaultInstance(), BoSBlocks.MEAT_PIE.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-            event.insertAfter(BoSBlocks.MEAT_PIE.toStack(), BoSBlocks.APPLE_PIE.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(Items.PUMPKIN_PIE.getDefaultInstance(), BoSBlocks.APPLE_PIE.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(BoSBlocks.APPLE_PIE.toStack(), BoSBlocks.BERRY_PIE.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(BoSBlocks.BERRY_PIE.toStack(), BoSBlocks.MEAT_PIE.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
     }
 }

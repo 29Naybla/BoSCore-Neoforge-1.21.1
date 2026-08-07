@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "minecraft:sweet_berries"
+    },
+    "w": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "pattern": [
+    "bbb",
+    "wbw",
+    "www"
+  ],
+  "result": {
+    "count": 1,
+    "id": "bos_core:berry_pie"
+  }
+}
