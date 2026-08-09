@@ -5,6 +5,7 @@
   "mixins": [
     "AnvilMenuMixin",
     "CatMixin",
+    "CowMixin",
     "CustomNameVisibleMixin",
     "NameTagItemMixin",
     "NoiseChunkGeneratorMixin",
