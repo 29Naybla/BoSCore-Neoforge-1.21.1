@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,11 +42,13 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
     private static final int FUEL_SLOT = 9;
     private static final int OUTPUT_SLOT = 10;
     protected final ContainerData data;
-    private final RecipeManager.CachedCheck<SingleRecipeInputContainer, AbstractBakingRecipe> quickCheck = RecipeManager.createCheck(BoSRecipes.BAKING_TYPE.get());
+    private final RecipeManager.CachedCheck<SingleRecipeInputContainer, AbstractBakingRecipe> quickCheck =
+            RecipeManager.createCheck(BoSRecipes.BAKING_TYPE.get());
     private int bakingProgress = 0;
     private int bakingTotalTime = 72;
     private int litTime = 0;
     private int fuelAmount = 0;
+    private ItemStack activeFuel = ItemStack.EMPTY;
     private AbstractBakingRecipe currentRecipe = null;
     public final ItemStackHandler inventory = new ItemStackHandler(11) {
         @Override
@@ -126,6 +129,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
         tag.putInt("BakeTimeTotal", bakingTotalTime);
         tag.putInt("LitTime", litTime);
         tag.putInt("FuelAmount", fuelAmount);
+        tag.put("ActiveFuel", activeFuel.saveOptional(registries));
     }
 
     @Override
@@ -137,27 +141,27 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
         bakingTotalTime = tag.getInt("BakeTimeTotal");
         litTime = tag.getInt("LitTime");
         fuelAmount = tag.getInt("FuelAmount");
+        activeFuel = ItemStack.parseOptional(registries, tag.getCompound("ActiveFuel"));
     }
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, OvenBlockEntity ovenBlockEntity) {
-        boolean wasLit = ovenBlockEntity.litTime > 0;
-        if (ovenBlockEntity.litTime > 0) {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, OvenBlockEntity ovenBlockEntity) {
+        if (isFueled(ovenBlockEntity, pPos, pLevel)) {
             ovenBlockEntity.litTime--;
+            if (ovenBlockEntity.litTime <= 0) {
+                ovenBlockEntity.activeFuel = ItemStack.EMPTY;
+            }
         } else {
             ovenBlockEntity.litTime = 0;
         }
 
         if (hasRecipe(ovenBlockEntity)) {
             ovenBlockEntity.bakingProgress++;
-            ovenBlockEntity.setChanged(level, blockPos, blockState, true);
-            if (ovenBlockEntity.bakingProgress >= ovenBlockEntity.bakingTotalTime) {
+            ovenBlockEntity.setChanged(pLevel, pPos, pState, true);
+            if (ovenBlockEntity.bakingProgress == ovenBlockEntity.bakingTotalTime) {
                 craftItem(ovenBlockEntity);
             }
         } else {
             ovenBlockEntity.resetProgress();
-            if (wasLit && ovenBlockEntity.litTime <= 0) {
-                ovenBlockEntity.setChanged(level, blockPos, blockState, false);
-            }
         }
     }
 
@@ -173,12 +177,6 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private static void craftItem(OvenBlockEntity ovenBlockEntity) {
-
-        SimpleContainer inventory = new SimpleContainer(ovenBlockEntity.inventory.getSlots());
-        for (int i = 0; i < ovenBlockEntity.inventory.getSlots(); i++) {
-            inventory.setItem(i, ovenBlockEntity.inventory.getStackInSlot(i));
-        }
-
         var currentRecipe = ovenBlockEntity.currentRecipe;
         if (currentRecipe != null) {
             for (int i = 0; i < 9; ++i) {
@@ -195,13 +193,16 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
             for (int i = 0; i < 9; ++i) {
                 ovenBlockEntity.inventory.extractItem(i, 1, false);
             }
-            inventory.getItem(OUTPUT_SLOT).is(currentRecipe.getResultItem().getItem());
 
-            ovenBlockEntity.inventory.setStackInSlot(OUTPUT_SLOT, new ItemStack(currentRecipe.getResultItem().getItem(),
-                    ovenBlockEntity.inventory.getStackInSlot(OUTPUT_SLOT).getCount() + ovenBlockEntity.getTheCount(currentRecipe.getResultItem())));
+            ItemStack resultStack = currentRecipe.getResultItem(ovenBlockEntity.level.registryAccess());
+            ItemStack currentOutput = ovenBlockEntity.inventory.getStackInSlot(10);
+            if (currentOutput.isEmpty()) {
+                ovenBlockEntity.inventory.setStackInSlot(10, resultStack.copy());
+            } else {
+                currentOutput.grow(resultStack.getCount());
+            }
 
             ovenBlockEntity.resetProgress();
-
         }
     }
 
@@ -211,13 +212,10 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
         level.addFreshEntity(entity);
     }
 
-    private int getTheCount(ItemStack itemIn) {
-        return itemIn.getCount();
-    }
-
     private void resetProgress() {
-        bakingProgress = 0;
-        bakingTotalTime = 72;
+        this.bakingProgress = 0;
+        this.bakingTotalTime = 72;
+        this.currentRecipe = null;
     }
 
     private static boolean hasRecipe(OvenBlockEntity ovenBlockEntity) {
@@ -236,7 +234,6 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
 
-
         return false;
     }
 
@@ -251,13 +248,44 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
         return currentOutput.getCount() + output.getCount() <= currentOutput.getMaxStackSize();
     }
 
-    static boolean startCraftIfFueled(OvenBlockEntity ovenBlockEntity, BlockPos pos, Level level, int progress) {
-        if (!isFueledWithTier(ovenBlockEntity, pos, level)) {
-            if (!ovenBlockEntity.burnFuel(requiredTier))
+    static boolean startCraftIfFueled(OvenBlockEntity ovenBlockEntity, BlockPos pos, Level level, AbstractBakingRecipe recipe) {
+        if (!isFueled(ovenBlockEntity, pos, level) || !recipe.fuelMatches(ovenBlockEntity.activeFuel) || ovenBlockEntity.currentFuelTier < recipe.getFuelTier()) {
+            if (!ovenBlockEntity.burnFuel(recipe))
                 return false;
         }
-        ovenBlockEntity.bakingTotalTime = progress;
+        ovenBlockEntity.bakingTotalTime = recipe.getCookTime();
         return true;
+    }
+
+    private boolean burnFuel(AbstractBakingRecipe recipe) {
+        if (!this.level.isClientSide) {
+            var fuel = this.inventory.getStackInSlot(9).copy();
+            if (recipe.fuelMatches(fuel)) {
+                ForgeFuelManager.FuelInfo info = ForgeFuelManager.getFuelInfo(fuel);
+
+                int burnTime = info != null && info.burnTime() > 0 ? info.burnTime() : 0;
+                if (burnTime <= 0) {
+                    burnTime = fuel.getBurnTime(RecipeType.SMOKING);
+                }
+                if (burnTime <= 0) {
+                    burnTime = fuel.getBurnTime(RecipeType.SMELTING);
+                }
+                if (burnTime <= 0) {
+                    burnTime = 200;
+                }
+                this.fuelAmount = burnTime;
+                this.litTime = burnTime;
+                this.activeFuel = fuel.copyWithCount(1);
+                if (fuel.getCount() > 1) {
+                    fuel.setCount(fuel.getCount() - 1);
+                    this.inventory.setStackInSlot(FUEL_SLOT, fuel);
+                } else {
+                    this.inventory.setStackInSlot(FUEL_SLOT, fuel.getCraftingRemainingItem());
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
