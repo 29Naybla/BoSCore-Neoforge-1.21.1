@@ -1,9 +1,7 @@
 package com.x29naybla.bos_core;
 
-import com.x29naybla.bos_core.common.registry.BoSBlocks;
-import com.x29naybla.bos_core.common.registry.BoSItems;
+import com.x29naybla.bos_core.common.registry.*;
 
-import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -21,7 +19,10 @@ public class BoSCore {
 
         BoSItems.register(modEventBus);
         BoSBlocks.register(modEventBus);
+        BoSBlockEntities.register(modEventBus);
+        BoSMenuTypes.register(modEventBus);
         BoSRecipes.RECIPE_SERIALIZERS.register(modEventBus);
+        BoSRecipes.RECIPE_TYPES.register(modEventBus);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

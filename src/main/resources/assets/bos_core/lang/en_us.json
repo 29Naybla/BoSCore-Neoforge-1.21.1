@@ -7,5 +7,8 @@
 
   "block.bos_core.meat_pie": "Meat Pie",
   "block.bos_core.apple_pie": "Apple Pie",
-  "block.bos_core.berry_pie": "Berry Pie"
+  "block.bos_core.berry_pie": "Berry Pie",
+  "block.bos_core.oven": "Oven",
+
+  "container.oven": "Oven"
 }
