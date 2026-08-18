@@ -6,6 +6,7 @@ import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import com.x29naybla.bos_core.common.registry.BoSMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -64,12 +65,14 @@ public class OvenMenu extends AbstractContainerMenu {
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress : 0;
     }
 
-    public int getLitTime() {
+    public float getLitTime() {
         int litTime = this.data.get(2);
         int fuel = this.data.get(3);
-        float percentage = (float) litTime / fuel;
-        percentage = percentage * 17 + 3;
-        return (int) percentage;
+        if (fuel == 0) {
+            fuel = 200;
+        }
+
+        return Mth.ceil(Mth.clamp((float) litTime / fuel, 0.0F, 1.0F) * 13.0F) + 2;
     }
 
     @Override

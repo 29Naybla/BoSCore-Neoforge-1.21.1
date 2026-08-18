@@ -17,17 +17,23 @@ import java.util.function.Supplier;
 public class BoSItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(BoSCore.MODID);
 
-
-
-    public static void register(IEventBus eventBus){
-        ITEMS.register(eventBus);
-    }
-
     public static final Supplier<Item> SHADOW_PUMPKIN_PIE = ITEMS.register("shadow_pumpkin_pie",
-            () -> new BlockItem(BoSBlocks.PUMPKIN_PIE.get(), new Item.Properties()) {
+            () -> new BlockItem(BoSBlocks.PUMPKIN_PIE.get(), new Item.Properties().stacksTo(1)) {
                 @Override
                 public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag isAdvanced) {
                     tooltip.add(Component.literal("You naughty player ;)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
                 }
             });
+    public static final Supplier<Item> MEAT_PIE = ITEMS.register("meat_pie",
+            () -> new BlockItem(BoSBlocks.MEAT_PIE.get(), new Item.Properties().stacksTo(1)));
+
+    public static final Supplier<Item> APPLE_PIE = ITEMS.register("apple_pie",
+            () -> new BlockItem(BoSBlocks.APPLE_PIE.get(), new Item.Properties().stacksTo(1)));
+
+    public static final Supplier<Item> BERRY_PIE = ITEMS.register("berry_pie",
+            () -> new BlockItem(BoSBlocks.BERRY_PIE.get(), new Item.Properties().stacksTo(1)));
+
+    public static void register(IEventBus eventBus){
+        ITEMS.register(eventBus);
+    }
 }

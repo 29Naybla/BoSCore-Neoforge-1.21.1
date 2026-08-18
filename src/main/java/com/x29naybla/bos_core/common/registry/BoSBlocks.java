@@ -29,13 +29,13 @@ public class BoSBlocks {
     public static final DeferredBlock<Block> GRAVEL_PATH = registerBlock("gravel_path",
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL), Blocks.GRAVEL.defaultBlockState()));
 
-    public static final DeferredBlock<Block> PUMPKIN_PIE = registerBlock("pumpkin_pie",
+    public static final DeferredBlock<Block> PUMPKIN_PIE = BLOCKS.register("pumpkin_pie",
             () -> new PumpkinPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
-    public static final DeferredBlock<Block> MEAT_PIE = registerBlock("meat_pie",
+    public static final DeferredBlock<Block> MEAT_PIE = BLOCKS.register("meat_pie",
             () -> new MeatPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
-    public static final DeferredBlock<Block> APPLE_PIE = registerBlock("apple_pie",
+    public static final DeferredBlock<Block> APPLE_PIE = BLOCKS.register("apple_pie",
             () -> new ApplePieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
-    public static final DeferredBlock<Block> BERRY_PIE = registerBlock("berry_pie",
+    public static final DeferredBlock<Block> BERRY_PIE = BLOCKS.register("berry_pie",
             () -> new BerryPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
 
     public static final DeferredBlock<Block> OVEN = registerBlock("oven",
