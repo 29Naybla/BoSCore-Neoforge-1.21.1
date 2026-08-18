@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -36,4 +37,9 @@ public class BoSRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BakingShapedRecipe>> BAKING_SHAPED_SERIALIZER =
             RECIPE_SERIALIZERS.register("baking_shaped", () -> BakingShapedRecipe.Serializer.INSTANCE);
 
+
+    public static void register(IEventBus eventBus) {
+        RECIPE_TYPES.register(eventBus);
+        RECIPE_SERIALIZERS.register(eventBus);
+    }
 }

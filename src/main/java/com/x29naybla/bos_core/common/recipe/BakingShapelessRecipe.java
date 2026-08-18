@@ -19,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class BakingShapelessRecipe extends AbstractBakingRecipe {
-    private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
+    private final ItemStack output;
     private final int cookTime;
 
     public BakingShapelessRecipe(String group, BakingBookCategory category, ItemStack output, NonNullList<Ingredient> recipeItems, Optional<Ingredient> fuel, int cookTime) {
@@ -87,7 +87,7 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                 Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").forGetter(recipe -> recipe.recipeItems),
                 Ingredient.CODEC_NONEMPTY.optionalFieldOf("fuel").forGetter(BakingShapelessRecipe::getFuel),
-                Codec.INT.optionalFieldOf("cooktime", 200).forGetter(BakingShapelessRecipe::getCookTime)
+                Codec.INT.optionalFieldOf("cookingTime", 200).forGetter(BakingShapelessRecipe::getCookTime)
         ).apply(instance, (group, category, result, ingredients, fuel, cookTime) ->
                 new BakingShapelessRecipe(group, category, result, NonNullList.copyOf(ingredients), fuel, cookTime)));
 

@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
 import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -84,7 +83,7 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return null;
+        return Serializer.INSTANCE;
     }
 
     @Override
@@ -101,7 +100,7 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
                 ShapedRecipePattern.MAP_CODEC.forGetter(BakingShapedRecipe::getPattern),
                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                 Ingredient.CODEC_NONEMPTY.optionalFieldOf("fuel").forGetter(BakingShapedRecipe::getFuel),
-                Codec.INT.optionalFieldOf("cooktime", 200).forGetter(BakingShapedRecipe::getCookTime)
+                Codec.INT.optionalFieldOf("cookingTime", 200).forGetter(BakingShapedRecipe::getCookTime)
         ).apply(instance, BakingShapedRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, BakingShapedRecipe> STREAM_CODEC = StreamCodec.of(

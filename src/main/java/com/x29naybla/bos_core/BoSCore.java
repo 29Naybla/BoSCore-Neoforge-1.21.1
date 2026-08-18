@@ -21,8 +21,7 @@ public class BoSCore {
         BoSBlocks.register(modEventBus);
         BoSBlockEntities.register(modEventBus);
         BoSMenuTypes.register(modEventBus);
-        BoSRecipes.RECIPE_SERIALIZERS.register(modEventBus);
-        BoSRecipes.RECIPE_TYPES.register(modEventBus);
+        BoSRecipes.register(modEventBus);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

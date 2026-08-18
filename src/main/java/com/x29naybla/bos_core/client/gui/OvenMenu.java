@@ -1,16 +1,19 @@
 package com.x29naybla.bos_core.client.gui;
 
+import com.x29naybla.bos_core.client.gui.slot.BoSFuelSlot;
+import com.x29naybla.bos_core.client.gui.slot.BoSResultSlot;
 import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import com.x29naybla.bos_core.common.registry.BoSMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +23,7 @@ public class OvenMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public OvenMenu(int containerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(containerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(containerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
     public OvenMenu(int containerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
@@ -39,14 +42,18 @@ public class OvenMenu extends AbstractContainerMenu {
             }
         }
 
-        this.addSlot(new SlotItemHandler(this.blockEntity.inventory, index++, 124,56));
-        this.addSlot(new SlotItemHandler(this.blockEntity.inventory, index, 124,17));
+        this.addSlot(new BoSFuelSlot(this.blockEntity.inventory, index++, 124,56));
+        this.addSlot(new BoSResultSlot(this.blockEntity.inventory, index, 124,17));
 
-        this.addDataSlots(data);
+        addDataSlots(data);
     }
 
     public boolean isLit() {
         return data.get(0) > 0;
+    }
+
+    public boolean isFueled() {
+        return blockEntity.getBlockState().getValue(BlockStateProperties.LIT);
     }
 
     public int getBurnProgress() {
@@ -55,6 +62,14 @@ public class OvenMenu extends AbstractContainerMenu {
         int arrowPixelSize = 24;
 
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress : 0;
+    }
+
+    public int getLitTime() {
+        int litTime = this.data.get(2);
+        int fuel = this.data.get(3);
+        float percentage = (float) litTime / fuel;
+        percentage = percentage * 17 + 3;
+        return (int) percentage;
     }
 
     @Override
@@ -68,7 +83,7 @@ public class OvenMenu extends AbstractContainerMenu {
 
         if(index < 36) {
             //this is player inv
-            boolean isFuel = sourceStack.is(ItemTags.LOGS_THAT_BURN);
+            boolean isFuel = AbstractFurnaceBlockEntity.isFuel(sourceStack);
 
             if (isFuel && !moveItemStackTo(sourceStack, 36+9, 36+10, false)) {
                 if(!moveItemStackTo(sourceStack, 36, 36+9, false)) {
@@ -100,36 +115,6 @@ public class OvenMenu extends AbstractContainerMenu {
         }
         sourceSlot.onTake(player, sourceStack);
         return copyOfSourceStack;
-
-        /*
-        if (index == 10) {
-            if (!this.moveItemStackTo(sourceStack, 11, 47, true)) {
-                return ItemStack.EMPTY;
-            }
-            //sourceSlot.onQuickCraft(sourceStack, copyOfSourceStack);
-        } else if (index < 10) {
-            if (!moveItemStackTo(sourceStack, 11, 47, false)) {
-                return ItemStack.EMPTY;
-            }
-        } else {
-            //change/fix this into Oven.isFuel(this.level, sourceStack); later
-            boolean isFuel = sourceStack.is(ItemTags.LOGS_THAT_BURN);
-            if (isFuel && !moveItemStackTo(sourceStack, 9, 10, false)) {
-                if (!moveItemStackTo(sourceStack, 0, 9, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            if (!moveItemStackTo(sourceStack, 0, 9, false)) {
-                return ItemStack.EMPTY;
-            }
-        }
-
-        if (sourceStack.getCount() == 0) sourceSlot.set(ItemStack.EMPTY);
-        else sourceSlot.setChanged();
-
-        sourceSlot.onTake(player, sourceStack);
-        return copyOfSourceStack;
-         */
 
     }
 

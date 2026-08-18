@@ -16,11 +16,14 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -36,8 +39,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 import static com.x29naybla.bos_core.common.block.OvenBlock.LIT;
+import static net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.isFuel;
 
-public class OvenBlockEntity extends BlockEntity implements MenuProvider {
+public class OvenBlockEntity extends BlockEntity implements MenuProvider, WorldlyContainer, StackedContentsCompatible {
     private static final int[] INGREDIENT_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
     private static final int FUEL_SLOT = 9;
     private static final int OUTPUT_SLOT = 10;
@@ -117,10 +121,6 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
         super.setChanged();
     }
 
-    private boolean isLit() {
-        return this.bakingProgress > 0;
-    }
-
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
@@ -136,7 +136,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadAdditional(tag, registries);
 
-        inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+        if(tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         bakingProgress = tag.getInt("BakeTime");
         bakingTotalTime = tag.getInt("BakeTimeTotal");
         litTime = tag.getInt("LitTime");
@@ -194,6 +194,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
                 ovenBlockEntity.inventory.extractItem(i, 1, false);
             }
 
+            assert ovenBlockEntity.level != null;
             ItemStack resultStack = currentRecipe.getResultItem(ovenBlockEntity.level.registryAccess());
             ItemStack currentOutput = ovenBlockEntity.inventory.getStackInSlot(10);
             if (currentOutput.isEmpty()) {
@@ -223,6 +224,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
         BlockPos pos = ovenBlockEntity.getBlockPos();
 
         SingleRecipeInputContainer input = new SingleRecipeInputContainer(ovenBlockEntity.inventory);
+        assert level != null;
         Optional<RecipeHolder<AbstractBakingRecipe>> recipeMatch = ovenBlockEntity.quickCheck.getRecipeFor(input, level);
 
         if (recipeMatch.isPresent()) {
@@ -249,7 +251,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     static boolean startCraftIfFueled(OvenBlockEntity ovenBlockEntity, BlockPos pos, Level level, AbstractBakingRecipe recipe) {
-        if (!isFueled(ovenBlockEntity, pos, level) || !recipe.fuelMatches(ovenBlockEntity.activeFuel) || ovenBlockEntity.currentFuelTier < recipe.getFuelTier()) {
+        if (!isFueled(ovenBlockEntity, pos, level) || !recipe.fuelMatches(ovenBlockEntity.activeFuel)) {
             if (!ovenBlockEntity.burnFuel(recipe))
                 return false;
         }
@@ -258,21 +260,22 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private boolean burnFuel(AbstractBakingRecipe recipe) {
+        assert this.level != null;
         if (!this.level.isClientSide) {
-            var fuel = this.inventory.getStackInSlot(9).copy();
-            if (recipe.fuelMatches(fuel)) {
-                ForgeFuelManager.FuelInfo info = ForgeFuelManager.getFuelInfo(fuel);
+            var fuel = this.inventory.getStackInSlot(FUEL_SLOT).copy();
 
-                int burnTime = info != null && info.burnTime() > 0 ? info.burnTime() : 0;
-                if (burnTime <= 0) {
-                    burnTime = fuel.getBurnTime(RecipeType.SMOKING);
-                }
-                if (burnTime <= 0) {
-                    burnTime = fuel.getBurnTime(RecipeType.SMELTING);
-                }
-                if (burnTime <= 0) {
-                    burnTime = 200;
-                }
+            // look for fuel definitions that specifically consider this recipe type
+            int burnTime = fuel.getBurnTime(recipe.getType());
+            // then prioritize smoking if none exist
+            if (burnTime <= 0) {
+                burnTime = fuel.getBurnTime(RecipeType.SMOKING);
+            }
+            // then default furnaces
+            if (burnTime <= 0) {
+                burnTime = fuel.getBurnTime(RecipeType.SMELTING);
+            }
+
+            if (burnTime > 0) {
                 this.fuelAmount = burnTime;
                 this.litTime = burnTime;
                 this.activeFuel = fuel.copyWithCount(1);
@@ -284,6 +287,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
                 }
                 return true;
             }
+
         }
         return false;
     }
@@ -296,6 +300,87 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
         return saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public int @NotNull [] getSlotsForFace(@NotNull Direction side) {
+        if (side == Direction.UP) {
+            return INGREDIENT_SLOTS;
+        } else {
+            return new int[]{side == Direction.DOWN ? OUTPUT_SLOT : FUEL_SLOT};
+        }
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int index, @NotNull ItemStack itemStack, @Nullable Direction direction) {
+        return canPlaceItem(index, itemStack);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int index, @NotNull ItemStack stack, @NotNull Direction direction) {
+        if (direction == Direction.DOWN && index == OUTPUT_SLOT) {
+            return true;
+        }
+        return direction != Direction.UP && index == FUEL_SLOT && !isFuel(stack);
+    }
+
+    @Override
+    public int getContainerSize() {
+        return this.inventory.getSlots();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (int i = 0; i < this.inventory.getSlots(); ++i) {
+            if (!this.inventory.getStackInSlot(i).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public @NotNull ItemStack getItem(int slot) {
+        return this.inventory.getStackInSlot(slot);
+    }
+
+    @Override
+    public @NotNull ItemStack removeItem(int slot, int amount) {
+        return this.inventory.extractItem(slot, amount, false);
+    }
+
+    @Override
+    public @NotNull ItemStack removeItemNoUpdate(int slot) {
+        return this.inventory.extractItem(slot, 1, false);
+    }
+
+    @Override
+    public void setItem(int slot, @NotNull ItemStack stack) {
+        this.inventory.setStackInSlot(slot, stack);
+    }
+
+    @Override
+    public boolean stillValid(@NotNull Player player) {
+        assert this.level != null;
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        } else {
+            return player.distanceToSqr((double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D) <= 64.0D;
+        }
+    }
+
+    @Override
+    public void clearContent() {
+        for (int i = 0; i < this.inventory.getSlots(); i++) {
+            this.inventory.setStackInSlot(i, ItemStack.EMPTY);
+        }
+    }
+
+    @Override
+    public void fillStackedContents(@NotNull StackedContents contents) {
+        for (int i = 0; i < this.getContainerSize(); i++) {
+            contents.accountStack(this.getItem(i));
+        }
     }
 
     public static class SingleRecipeInputContainer implements RecipeInput {

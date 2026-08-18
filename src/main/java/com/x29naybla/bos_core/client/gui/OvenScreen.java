@@ -18,6 +18,11 @@ public class OvenScreen extends AbstractContainerScreen<OvenMenu> {
     }
 
     @Override
+    protected void init() {
+        super.init();
+    }
+
+    @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -28,12 +33,21 @@ public class OvenScreen extends AbstractContainerScreen<OvenMenu> {
 
         guiGraphics.blit(GUI_TEXTURE, x-5, y, 0, 0, imageWidth, imageHeight);
 
+        renderBakingProgress(guiGraphics, x-5, y);
         renderBurnProgress(guiGraphics, x-5, y);
     }
 
-    private void renderBurnProgress(GuiGraphics guiGraphics, int x, int y) {
+    private void renderBakingProgress(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isLit()) {
             guiGraphics.blit(GUI_TEXTURE, x + 90, y + 35, 176, 14, menu.getBurnProgress(), 17);
+        }
+    }
+
+    private void renderBurnProgress(GuiGraphics guiGraphics, int x, int y) {
+        if(menu.isFueled()){
+            float currentHeight = menu.getLitTime();
+            int offset = (int) (15 - currentHeight);
+            guiGraphics.blit(GUI_TEXTURE, x + 124, y + 39 + offset, 176, offset, 14, (int) currentHeight);
         }
     }
 
@@ -41,5 +55,11 @@ public class OvenScreen extends AbstractContainerScreen<OvenMenu> {
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        super.renderLabels(guiGraphics, mouseX, mouseY);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, 8, (this.imageHeight - 96 + 2), 4210752, false);
     }
 }
