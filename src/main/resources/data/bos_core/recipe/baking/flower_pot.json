@@ -1,0 +1,18 @@
+{
+  "type": "bos_core:baking_shaped",
+  "category": "misc",
+  "cookingTime": 200,
+  "key": {
+    "#": {
+      "item": "minecraft:clay_ball"
+    }
+  },
+  "pattern": [
+    "# #",
+    " # "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:flower_pot"
+  }
+}

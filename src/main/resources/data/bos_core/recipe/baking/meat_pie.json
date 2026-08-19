@@ -1,15 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "type": "bos_core:baking_shaped",
+  "category": "food",
+  "cookingTime": 400,
   "key": {
     "m": {
-      "tag": "c:foods/cooked_meat"
+      "tag": "c:foods/raw_meat"
     },
     "w": {
       "item": "minecraft:wheat"
     },
     "p": {
-      "item": "minecraft:baked_potato"
+      "item": "minecraft:potato"
     }
   },
   "pattern": [

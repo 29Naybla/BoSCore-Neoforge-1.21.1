@@ -1,0 +1,20 @@
+{
+  "type": "bos_core:baking_shaped",
+  "category": "food",
+  "cookingTime": 200,
+  "key": {
+    "#": {
+      "item": "minecraft:wheat"
+    },
+    "X": {
+      "item": "minecraft:cocoa_beans"
+    }
+  },
+  "pattern": [
+    "#X#"
+  ],
+  "result": {
+    "count": 8,
+    "id": "minecraft:cookie"
+  }
+}

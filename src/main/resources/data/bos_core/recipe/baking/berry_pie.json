@@ -1,6 +1,7 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "type": "bos_core:baking_shaped",
+  "category": "food",
+  "cookingTime": 400,
   "key": {
     "b": {
       "item": "minecraft:sweet_berries"

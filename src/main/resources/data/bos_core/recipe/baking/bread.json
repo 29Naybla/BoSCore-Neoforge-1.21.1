@@ -1,0 +1,17 @@
+{
+  "type": "bos_core:baking_shaped",
+  "category": "food",
+  "cookingTime": 200,
+  "key": {
+    "#": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:bread"
+  }
+}

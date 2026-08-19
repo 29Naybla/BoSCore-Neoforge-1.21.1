@@ -39,7 +39,7 @@ displayName="${mod_name}" #mandatory
 #logoFile="examplemod.png" #optional
 
 # A text field displayed in the mod UI
-credits="LogNok" #optional
+credits="LogNok, asof, cara" #optional
 
 # The authors of the mod, displayed in the mod UI (optional)
 authors="29Naybla"
