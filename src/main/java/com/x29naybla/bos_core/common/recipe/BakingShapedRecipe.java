@@ -16,15 +16,13 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 public class BakingShapedRecipe extends AbstractBakingRecipe {
     private final ShapedRecipePattern pattern;
     private final ItemStack output;
     private final int cookTime;
 
-    public BakingShapedRecipe(String group, BakingBookCategory category, ShapedRecipePattern pattern, ItemStack output,  Optional<Ingredient> fuel, int cookTime) {
-        super(group, category, output, pattern.ingredients(), fuel, cookTime);
+    public BakingShapedRecipe(String group, BakingBookCategory category, ShapedRecipePattern pattern, ItemStack output, int cookTime) {
+        super(group, category, output, pattern.ingredients(), cookTime);
         this.pattern = pattern;
         this.output = output;
         this.cookTime = cookTime;
@@ -99,7 +97,6 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
                 BakingBookCategory.CODEC.optionalFieldOf("category", BakingBookCategory.MISC).forGetter(BakingShapedRecipe::getCategory),
                 ShapedRecipePattern.MAP_CODEC.forGetter(BakingShapedRecipe::getPattern),
                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
-                Ingredient.CODEC_NONEMPTY.optionalFieldOf("fuel").forGetter(BakingShapedRecipe::getFuel),
                 Codec.INT.optionalFieldOf("cookingTime", 200).forGetter(BakingShapedRecipe::getCookTime)
         ).apply(instance, BakingShapedRecipe::new));
 
@@ -109,7 +106,6 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
                     buf.writeEnum(recipe.category);
                     ShapedRecipePattern.STREAM_CODEC.encode(buf, recipe.pattern);
                     ItemStack.STREAM_CODEC.encode(buf, recipe.output);
-                    FUEL_STREAM_CODEC.encode(buf, recipe.getFuel());
                     buf.writeVarInt(recipe.cookTime);
                 },
                 buf -> {
@@ -117,9 +113,8 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
                     BakingBookCategory category = buf.readEnum(BakingBookCategory.class);
                     ShapedRecipePattern pattern = ShapedRecipePattern.STREAM_CODEC.decode(buf);
                     ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
-                    Optional<Ingredient> fuel = FUEL_STREAM_CODEC.decode(buf);
                     int cookTime = buf.readVarInt();
-                    return new BakingShapedRecipe(group, category, pattern, output, fuel, cookTime);
+                    return new BakingShapedRecipe(group, category, pattern, output, cookTime);
                 }
         );
 

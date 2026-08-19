@@ -179,31 +179,37 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
     private static void craftItem(OvenBlockEntity ovenBlockEntity) {
         var currentRecipe = ovenBlockEntity.currentRecipe;
         if (currentRecipe != null) {
-            for (int i = 0; i < 9; ++i) {
-                ItemStack slotStack = ovenBlockEntity.inventory.getStackInSlot(i);
-                if (slotStack.hasCraftingRemainingItem()) {
-                    Direction direction = ovenBlockEntity.getBlockState().getValue(OvenBlock.FACING).getCounterClockWise();
-                    double x = (double) ovenBlockEntity.worldPosition.getX() + 0.5 + (double) direction.getStepX() * 0.25;
-                    double y = (double) ovenBlockEntity.worldPosition.getY() + 0.7;
-                    double z = (double) ovenBlockEntity.worldPosition.getZ() + 0.5 + (double) direction.getStepZ() * 0.25;
-                    spawnItemEntity(ovenBlockEntity.level, ovenBlockEntity.inventory.getStackInSlot(i).getCraftingRemainingItem(), x, y, z, (float) direction.getStepX() * 0.08F, 0.25, (float) direction.getStepZ() * 0.08F);
-                }
-            }
-
-            for (int i = 0; i < 9; ++i) {
-                ovenBlockEntity.inventory.extractItem(i, 1, false);
-            }
+            handleRemainingItem(ovenBlockEntity);
 
             assert ovenBlockEntity.level != null;
             ItemStack resultStack = currentRecipe.getResultItem(ovenBlockEntity.level.registryAccess());
-            ItemStack currentOutput = ovenBlockEntity.inventory.getStackInSlot(10);
+            ItemStack currentOutput = ovenBlockEntity.inventory.getStackInSlot(OUTPUT_SLOT);
             if (currentOutput.isEmpty()) {
-                ovenBlockEntity.inventory.setStackInSlot(10, resultStack.copy());
+                ovenBlockEntity.inventory.setStackInSlot(OUTPUT_SLOT, resultStack.copy());
             } else {
                 currentOutput.grow(resultStack.getCount());
             }
 
             ovenBlockEntity.resetProgress();
+        }
+    }
+
+    public static void handleRemainingItem(OvenBlockEntity ovenBlockEntity) {
+        for (int i = 0; i < 9; ++i) {
+            ItemStack slotStack = ovenBlockEntity.inventory.getStackInSlot(i);
+            if(slotStack.hasCraftingRemainingItem()) {
+                if(slotStack.getCount() == 1) ovenBlockEntity.inventory.setStackInSlot(i, slotStack.getCraftingRemainingItem());
+                else {
+                    Direction direction = ovenBlockEntity.getBlockState().getValue(OvenBlock.FACING).getCounterClockWise();
+                    double x = (double) ovenBlockEntity.worldPosition.getX() + 0.5 + (double) direction.getStepX() * 0.25;
+                    double y = (double) ovenBlockEntity.worldPosition.getY() + 0.7;
+                    double z = (double) ovenBlockEntity.worldPosition.getZ() + 0.5 + (double) direction.getStepZ() * 0.25;
+                    spawnItemEntity(ovenBlockEntity.level, ovenBlockEntity.inventory.getStackInSlot(i).getCraftingRemainingItem(), x, y, z, (float) direction.getStepX() * 0.08F, 0.25, (float) direction.getStepZ() * 0.08F);
+                    ovenBlockEntity.inventory.extractItem(i, 1, false);
+                }
+            } else {
+                ovenBlockEntity.inventory.extractItem(i, 1, false);
+            }
         }
     }
 

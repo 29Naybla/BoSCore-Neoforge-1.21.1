@@ -16,15 +16,13 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 public class BakingShapelessRecipe extends AbstractBakingRecipe {
     private final NonNullList<Ingredient> recipeItems;
     private final ItemStack output;
     private final int cookTime;
 
-    public BakingShapelessRecipe(String group, BakingBookCategory category, ItemStack output, NonNullList<Ingredient> recipeItems, Optional<Ingredient> fuel, int cookTime) {
-        super(group, category, output, recipeItems, fuel, cookTime);
+    public BakingShapelessRecipe(String group, BakingBookCategory category, ItemStack output, NonNullList<Ingredient> recipeItems, int cookTime) {
+        super(group, category, output, recipeItems, cookTime);
         this.output = output;
         this.recipeItems = recipeItems;
         this.cookTime = cookTime;
@@ -86,10 +84,9 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
                 BakingBookCategory.CODEC.optionalFieldOf("category", BakingBookCategory.MISC).forGetter(BakingShapelessRecipe::getCategory),
                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                 Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").forGetter(recipe -> recipe.recipeItems),
-                Ingredient.CODEC_NONEMPTY.optionalFieldOf("fuel").forGetter(BakingShapelessRecipe::getFuel),
                 Codec.INT.optionalFieldOf("cookingTime", 200).forGetter(BakingShapelessRecipe::getCookTime)
-        ).apply(instance, (group, category, result, ingredients, fuel, cookTime) ->
-                new BakingShapelessRecipe(group, category, result, NonNullList.copyOf(ingredients), fuel, cookTime)));
+        ).apply(instance, (group, category, result, ingredients, cookTime) ->
+                new BakingShapelessRecipe(group, category, result, NonNullList.copyOf(ingredients), cookTime)));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, BakingShapelessRecipe> STREAM_CODEC = StreamCodec.of(
                 (buf, recipe) -> {
@@ -100,7 +97,6 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
                     for (Ingredient ing : recipe.recipeItems) {
                         Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ing);
                     }
-                    FUEL_STREAM_CODEC.encode(buf, recipe.getFuel());
                     buf.writeVarInt(recipe.cookTime);
                 },
                 buf -> {
@@ -112,9 +108,8 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
                     for (int i = 0; i < size; i++) {
                         ingredients.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
                     }
-                    Optional<Ingredient> fuel = FUEL_STREAM_CODEC.decode(buf);
                     int cookTime = buf.readVarInt();
-                    return new BakingShapelessRecipe(group, category, output, ingredients, fuel, cookTime);
+                    return new BakingShapelessRecipe(group, category, output, ingredients, cookTime);
                 }
         );
 
