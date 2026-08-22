@@ -76,6 +76,9 @@ public class BoSBlocks {
                     .sound(SoundType.GRASS)
                     .pushReaction(PushReaction.DESTROY)));
 
+    public static final DeferredBlock<Block> POTTED_APPLE_SAPLING = BLOCKS.register("potted_apple_sapling",
+            () -> new FlowerPotBlock(APPLE_SAPLING.get(), BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(PushReaction.DESTROY)));
+
     private static Block log(MapColor topMapColor, MapColor sideMapColor) {
         return new LogBlock(
                 BlockBehaviour.Properties.of()

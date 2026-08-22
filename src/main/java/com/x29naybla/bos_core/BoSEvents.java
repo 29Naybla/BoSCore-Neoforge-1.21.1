@@ -9,7 +9,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -24,6 +26,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber(modid = BoSCore.MODID)
@@ -52,6 +55,16 @@ public class BoSEvents {
     @SubscribeEvent
     public static void pieStacksToOne(ModifyDefaultComponentsEvent event) {
         event.modify((Items.PUMPKIN_PIE), (builder) -> builder.set(DataComponents.MAX_STACK_SIZE, 1));
+    }
+
+    @SubscribeEvent
+    public static void onEntitySize(EntityEvent.Size e) {
+        Entity entity = e.getEntity();
+
+        if ((entity instanceof Rabbit)) {
+            e.setNewSize(e.getOldSize().scale(1.67F));
+            if(((Rabbit) entity).isBaby()) e.setNewSize(e.getOldSize().scale(0.6F));
+        }
     }
 
     public static void turnIntoPath(Player player, BlockState state, Level level, BlockPos pos){

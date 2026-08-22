@@ -25,6 +25,7 @@
     "CatCollarLayerMixin",
     "CatRendererMixin",
     "GameRendererMixin",
+    "RabbitModelMixin",
     "RabbitRendererMixin",
     "SkyMixin",
     "WolfCollarLayerMixin"
