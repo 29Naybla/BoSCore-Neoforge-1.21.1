@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "bos_core:apple_seeds"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "bos_core:blocks/apple_sapling"
+}

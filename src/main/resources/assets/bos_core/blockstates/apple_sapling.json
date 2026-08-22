@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "bos_core:block/apple_sapling"
+    }
+  }
+}

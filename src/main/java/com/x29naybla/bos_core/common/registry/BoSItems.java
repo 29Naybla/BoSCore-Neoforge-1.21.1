@@ -2,6 +2,7 @@ package com.x29naybla.bos_core.common.registry;
 
 import com.x29naybla.bos_core.BoSCore;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -32,6 +33,9 @@ public class BoSItems {
 
     public static final Supplier<Item> BERRY_PIE = ITEMS.register("berry_pie",
             () -> new BlockItem(BoSBlocks.BERRY_PIE.get(), new Item.Properties().stacksTo(1)));
+
+    public static final Supplier<Item> APPLE_SEEDS = ITEMS.register("apple_seeds",
+            () -> new BlockItem(BoSBlocks.APPLE_SAPLING.get(), new Item.Properties().component(DataComponents.ITEM_NAME, Component.translatable("item.bos_core.apple_seeds"))));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

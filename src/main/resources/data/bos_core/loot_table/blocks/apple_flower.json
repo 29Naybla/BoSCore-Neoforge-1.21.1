@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:block",
+  "functions": [
+    {
+      "function": "minecraft:explosion_decay"
+    }
+  ],
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "block": "bos_core:apple_flower",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "age": "10"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:apple"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "bos_core:blocks/apple_flower"
+}

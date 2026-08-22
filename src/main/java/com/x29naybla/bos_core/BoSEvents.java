@@ -1,6 +1,7 @@
 package com.x29naybla.bos_core;
 
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
+import com.x29naybla.bos_core.common.registry.BoSItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
@@ -66,16 +67,39 @@ public class BoSEvents {
     public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(stack, DEFAULT_NAME_TAG_ITEM_COLOR)),
                 Items.NAME_TAG);
+        /*
+        event.register((stack, tintIndex) -> {
+            BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
+            return event.getBlockColors().getColor(blockstate, null, null, tintIndex);
+        },
+                BoSBlocks.APPLE_LEAVES,
+                BoSBlocks.FLOWERING_APPLE_LEAVES);
+         */
     }
+
+    /*
+    @SubscribeEvent
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
+        event.register((state, level, pos, tintIndex) -> level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : FoliageColor.getDefaultColor(),
+                BoSBlocks.APPLE_LEAVES.get(),
+                BoSBlocks.FLOWERING_APPLE_LEAVES.get());
+    }
+     */
 
     @SubscribeEvent
     public static void buildContents(BuildCreativeModeTabContentsEvent event){
-        if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS){
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.insertAfter(Blocks.CHERRY_LOG.asItem().getDefaultInstance(), BoSBlocks.APPLE_LOG.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS){
             event.insertAfter(Blocks.SAND.asItem().getDefaultInstance(), BoSBlocks.SAND_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.RED_SAND.asItem().getDefaultInstance(), BoSBlocks.RED_SAND_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.SNOW_BLOCK.asItem().getDefaultInstance(), BoSBlocks.SNOW_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.MUD.asItem().getDefaultInstance(), BoSBlocks.MUD_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.GRAVEL.asItem().getDefaultInstance(), BoSBlocks.GRAVEL_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(Blocks.CHERRY_LOG.asItem().getDefaultInstance(), BoSBlocks.APPLE_LOG.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(Blocks.CHERRY_LEAVES.asItem().getDefaultInstance(), BoSBlocks.APPLE_LEAVES.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(BoSBlocks.APPLE_LEAVES.toStack(), BoSBlocks.FLOWERING_APPLE_LEAVES.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(Blocks.CHERRY_SAPLING.asItem().getDefaultInstance(), BoSItems.APPLE_SEEDS.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.insertAfter(Blocks.FURNACE.asItem().getDefaultInstance(), BoSBlocks.OVEN.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         } else if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS){

@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "bos_core:block/apple_flower_stage0"
+    },
+    "age=1": {
+      "model": "bos_core:block/apple_flower_stage1"
+    },
+    "age=2": {
+      "model": "bos_core:block/apple_flower_stage2"
+    },
+    "age=3": {
+      "model": "bos_core:block/apple_flower_stage3"
+    },
+    "age=4": {
+      "model": "bos_core:block/apple_flower_stage4"
+    },
+    "age=5": {
+      "model": "bos_core:block/apple_flower_stage5"
+    },
+    "age=6": {
+      "model": "bos_core:block/apple_flower_stage6"
+    },
+    "age=7": {
+      "model": "bos_core:block/apple_flower_stage7"
+    },
+    "age=8": {
+      "model": "bos_core:block/apple_flower_stage8"
+    },
+    "age=9": {
+      "model": "bos_core:block/apple_flower_stage9"
+    },
+    "age=10": {
+      "model": "bos_core:block/apple_flower_stage10"
+    }
+
+  }
+}
