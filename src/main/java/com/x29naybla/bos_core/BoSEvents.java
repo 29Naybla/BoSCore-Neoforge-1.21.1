@@ -10,7 +10,9 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -26,6 +28,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
@@ -52,6 +55,15 @@ public class BoSEvents {
         }
     }
 
+    public static void turnIntoPath(Player player, BlockState state, Level level, BlockPos pos){
+        level.setBlockAndUpdate(pos, state);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
+        level.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS);
+        player.swing(player.getUsedItemHand());
+        player.getItemInHand(player.getUsedItemHand()).hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+        player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
+    }
+
     @SubscribeEvent
     public static void pieStacksToOne(ModifyDefaultComponentsEvent event) {
         event.modify((Items.PUMPKIN_PIE), (builder) -> builder.set(DataComponents.MAX_STACK_SIZE, 1));
@@ -67,13 +79,10 @@ public class BoSEvents {
         }
     }
 
-    public static void turnIntoPath(Player player, BlockState state, Level level, BlockPos pos){
-        level.setBlockAndUpdate(pos, state);
-        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
-        level.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS);
-        player.swing(player.getUsedItemHand());
-        player.getItemInHand(player.getUsedItemHand()).hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
-        player.awardStat(Stats.ITEM_USED.get(player.getItemInHand(player.getUsedItemHand()).getItem()));
+    @SubscribeEvent
+    public static void entityAttributeModification(EntityAttributeModificationEvent event) {
+        event.add(EntityType.RABBIT, Attributes.JUMP_STRENGTH, 0.5);
+        event.add(EntityType.RABBIT, Attributes.SAFE_FALL_DISTANCE, 6);
     }
 
     @SubscribeEvent
