@@ -36,41 +36,26 @@ public abstract class NameTagItemMixin extends Item {
 
     @Inject(at= {@At("HEAD")}, method = {"interactLivingEntity"}, cancellable = true)
     private void bos_interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir){
-        if (!(target instanceof Player)) {
-            if (!player.level().isClientSide() && target.isAlive()) {
-                if (target instanceof Mob) {
-                    ((Mob) target).setPersistenceRequired();
-                }
+        if((stack.has(DataComponents.CUSTOM_NAME) || stack.has(DataComponents.DYED_COLOR)) && !(target instanceof Player)) {
+           if(!player.level().isClientSide && target.isAlive()) {
+               if (!target.hasCustomName() && !stack.has(DataComponents.CUSTOM_NAME)) return;
+               target.setCustomName(bos_getNewName(stack, target));
+               stack.consume(1, player);
 
-                if (target instanceof Wolf wolf && wolf.isTame() && wolf.isOwnedBy(player)){
-                    ((LeatherCollarMixinAccess) wolf).bos_setLeatherCollarColor(Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb());
-                } else if (target instanceof Cat cat && cat.isTame() && cat.isOwnedBy(player)){
-                    ((LeatherCollarMixinAccess) cat).bos_setLeatherCollarColor(Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb());
-                }
+               if (target instanceof Mob) {
+                   ((Mob) target).setPersistenceRequired();
+               }
 
-                if(target.hasCustomName()){
-                    if(!Objects.requireNonNull(target.getCustomName()).getString().equals(stack.getHoverName().getString())
-                            || Objects.requireNonNull(target.getCustomName().getStyle().getColor()).getValue() != Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb()) {
-                        stack.shrink(1);
-                        target.setCustomName(bos_getNewName(stack, target));
+               if (target instanceof Wolf wolf && wolf.isTame() && wolf.isOwnedBy(player)){
+                   ((LeatherCollarMixinAccess) wolf).bos_setLeatherCollarColor(Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb());
+               } else if (target instanceof Cat cat && cat.isTame() && cat.isOwnedBy(player)){
+                   ((LeatherCollarMixinAccess) cat).bos_setLeatherCollarColor(Objects.requireNonNull(stack.get(DataComponents.DYED_COLOR)).rgb());
+               }
 
-                        cir.setReturnValue(InteractionResult.SUCCESS);
-                        return;
-                    } else {
-                        cir.setReturnValue(InteractionResult.PASS);
-                    }
-                } else if (stack.has(DataComponents.CUSTOM_NAME)) {
-                    stack.shrink(1);
-                    target.setCustomName(bos_getNewName(stack, target));
-
-                    cir.setReturnValue(InteractionResult.SUCCESS);
-                    return;
-                }
-
-            }
-        }
-        cir.setReturnValue(InteractionResult.PASS);
-        cir.cancel();
+               cir.setReturnValue(InteractionResult.SUCCESS);
+           }
+        } else
+            cir.setReturnValue(InteractionResult.PASS);
     }
 
     @Unique
