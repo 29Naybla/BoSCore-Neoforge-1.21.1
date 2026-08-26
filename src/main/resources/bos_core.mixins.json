@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AnvilMenuMixin",
+    "BedBlockMixin",
     "CatMixin",
     "CowMixin",
     "CustomNameVisibleMixin",
@@ -22,6 +23,7 @@
   },
   "client": [
     "AbstractContainerScreenMixin",
+    "BedRendererMixin",
     "CatCollarLayerMixin",
     "CatRendererMixin",
     "GameRendererMixin",
