@@ -6,13 +6,13 @@ import com.x29naybla.bos_core.common.registry.BoSBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -25,6 +25,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,6 +80,41 @@ public class OvenBlock extends BaseEntityBlock {
     }
 
     @Override
+    public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(@NotNull BlockState state, Level level, @NotNull BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof OvenBlockEntity ovenBlockEntity) {
+            ItemStackHandler inventory = ovenBlockEntity.inventory;
+            return calcRedstoneFromItemHandler(inventory);
+        }
+        return 0;
+    }
+
+    public static int calcRedstoneFromItemHandler(@Nullable IItemHandlerModifiable handler) {
+        if (handler == null) {
+            return 0;
+        } else {
+            int i = 0;
+            float f = 0.0F;
+
+            for (int j = 0; j < handler.getSlots(); ++j) {
+                ItemStack itemstack = handler.getStackInSlot(j);
+                if (!itemstack.isEmpty()) {
+                    f += (float) itemstack.getCount() / (float) Math.min(handler.getSlotLimit(j), itemstack.getMaxStackSize());
+                    ++i;
+                }
+            }
+
+            f = f / (float) handler.getSlots();
+            return net.minecraft.util.Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+        }
+    }
+
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, LIT);
     }
@@ -108,7 +145,7 @@ public class OvenBlock extends BaseEntityBlock {
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
         if(!level.isClientSide()) {
             if(level.getBlockEntity(pos) instanceof OvenBlockEntity ovenBlockEntity) {
-                player.openMenu(new SimpleMenuProvider(ovenBlockEntity, Component.translatable("container.oven")), pos);
+                player.openMenu(new SimpleMenuProvider(ovenBlockEntity, ovenBlockEntity.getName()), pos);
                 return InteractionResult.SUCCESS;
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
@@ -121,7 +158,11 @@ public class OvenBlock extends BaseEntityBlock {
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) return null;
 
-        return createTickerHelper(blockEntityType, BoSBlockEntities.OVEN.get(),
-                OvenBlockEntity::tick);
+        return createTickerHelper(blockEntityType, BoSBlockEntities.OVEN.get(), OvenBlockEntity::bakingTick);
+    }
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
+        return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
     }
 }

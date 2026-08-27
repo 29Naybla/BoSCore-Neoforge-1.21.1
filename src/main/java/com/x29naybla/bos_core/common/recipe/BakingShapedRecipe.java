@@ -3,7 +3,6 @@ package com.x29naybla.bos_core.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
 import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 
 public class BakingShapedRecipe extends AbstractBakingRecipe {
@@ -29,7 +29,7 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
     }
 
     @Override
-    public boolean matches(OvenBlockEntity.@NotNull SingleRecipeInputContainer input, @NotNull Level level) {
+    public boolean matches(@NotNull RecipeWrapper input, @NotNull Level level) {
         for (int xOffset = 0; xOffset <= 3 - this.getWidth(); ++xOffset) {
             for (int yOffset = 0; yOffset <= 3 - this.getHeight(); ++yOffset) {
                 if (this.matches(input, xOffset, yOffset, true)) return true;
@@ -39,7 +39,7 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
         return false;
     }
 
-    private boolean matches(OvenBlockEntity.SingleRecipeInputContainer input, int xOffset, int yOffset, boolean mirrored) {
+    private boolean matches(RecipeWrapper input, int xOffset, int yOffset, boolean mirrored) {
         int width = this.getWidth();
         int height = this.getHeight();
         for (int xn = 0; xn < 3; ++xn) {
@@ -58,7 +58,7 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(OvenBlockEntity.@NotNull SingleRecipeInputContainer input, HolderLookup.@NotNull Provider registries) {
+    public @NotNull ItemStack assemble(@NotNull RecipeWrapper input, HolderLookup.@NotNull Provider registries) {
         return output.copy();
     }
 

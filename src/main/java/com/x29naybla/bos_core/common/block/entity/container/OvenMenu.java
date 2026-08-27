@@ -1,7 +1,5 @@
-package com.x29naybla.bos_core.client.gui;
+package com.x29naybla.bos_core.common.block.entity.container;
 
-import com.x29naybla.bos_core.client.gui.slot.BoSFuelSlot;
-import com.x29naybla.bos_core.client.gui.slot.BoSResultSlot;
 import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import com.x29naybla.bos_core.common.registry.BoSMenuTypes;
@@ -11,27 +9,32 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class OvenMenu extends AbstractContainerMenu {
     public final OvenBlockEntity blockEntity;
-    private final Level level;
     private final ContainerData data;
+    public final ItemStackHandler inventory;
+    private final ContainerLevelAccess canInteractWithCallable;
 
     public OvenMenu(int containerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(containerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(containerId, inv, getBlockEntity(inv, extraData), new SimpleContainerData(4));
     }
 
     public OvenMenu(int containerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
         super(BoSMenuTypes.OVEN_MENU.get(), containerId);
         this.blockEntity = ((OvenBlockEntity) blockEntity);
-        this.level = inv.player.level();
         this.data = data;
+        this.inventory = ((OvenBlockEntity) blockEntity).inventory;
+        assert blockEntity.getLevel() != null;
+        this.canInteractWithCallable = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
@@ -44,9 +47,19 @@ public class OvenMenu extends AbstractContainerMenu {
         }
 
         this.addSlot(new BoSFuelSlot(this.blockEntity.inventory, index++, 124,56));
-        this.addSlot(new BoSResultSlot(this.blockEntity.inventory, index, 124,17));
+        this.addSlot(new BoSResultSlot(inv.player, (OvenBlockEntity) blockEntity, this.blockEntity.inventory, index, 124,17));
 
         addDataSlots(data);
+    }
+
+    private static OvenBlockEntity getBlockEntity(final Inventory playerInventory, final FriendlyByteBuf data) {
+        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
+        Objects.requireNonNull(data, "data cannot be null");
+        final BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(data.readBlockPos());
+        if (blockEntity instanceof OvenBlockEntity ovenBlockEntity) {
+            return ovenBlockEntity;
+        }
+        throw new IllegalStateException("Block entity is not correct! " + blockEntity);
     }
 
     public boolean isLit() {
@@ -123,8 +136,7 @@ public class OvenMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                player, BoSBlocks.OVEN.get());
+        return stillValid(canInteractWithCallable, player, BoSBlocks.OVEN.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

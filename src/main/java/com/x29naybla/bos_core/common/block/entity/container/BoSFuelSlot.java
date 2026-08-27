@@ -1,4 +1,4 @@
-package com.x29naybla.bos_core.client.gui.slot;
+package com.x29naybla.bos_core.common.block.entity.container;
 
 import net.minecraft.world.inventory.FurnaceFuelSlot;
 import net.minecraft.world.item.ItemStack;

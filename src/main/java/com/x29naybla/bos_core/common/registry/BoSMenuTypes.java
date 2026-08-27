@@ -1,7 +1,7 @@
 package com.x29naybla.bos_core.common.registry;
 
 import com.x29naybla.bos_core.BoSCore;
-import com.x29naybla.bos_core.client.gui.OvenMenu;
+import com.x29naybla.bos_core.common.block.entity.container.OvenMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

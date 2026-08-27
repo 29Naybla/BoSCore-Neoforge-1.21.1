@@ -3,7 +3,6 @@ package com.x29naybla.bos_core.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
 import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 
 public class BakingShapelessRecipe extends AbstractBakingRecipe {
@@ -29,7 +29,7 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
     }
 
     @Override
-    public boolean matches(OvenBlockEntity.@NotNull SingleRecipeInputContainer input, @NotNull Level level) {
+    public boolean matches(@NotNull RecipeWrapper input, @NotNull Level level) {
         int ingredientCount = 0;
         for (int j = 0; j < 9; ++j) {
             ItemStack stack = input.getItem(j);
@@ -57,7 +57,7 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(OvenBlockEntity.@NotNull SingleRecipeInputContainer input, HolderLookup.@NotNull Provider registries) {
+    public @NotNull ItemStack assemble(@NotNull RecipeWrapper input, HolderLookup.@NotNull Provider registries) {
         return output.copy();
     }
 

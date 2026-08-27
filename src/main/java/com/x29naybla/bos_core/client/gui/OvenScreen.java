@@ -2,6 +2,7 @@ package com.x29naybla.bos_core.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.x29naybla.bos_core.BoSCore;
+import com.x29naybla.bos_core.common.block.entity.container.OvenMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
