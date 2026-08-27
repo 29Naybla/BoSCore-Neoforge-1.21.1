@@ -3,6 +3,7 @@ package com.x29naybla.bos_core.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.x29naybla.bos_core.client.recipe_book.BakingBookCategory;
 import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -103,14 +104,14 @@ public class BakingShapedRecipe extends AbstractBakingRecipe {
         private static final StreamCodec<RegistryFriendlyByteBuf, BakingShapedRecipe> STREAM_CODEC = StreamCodec.of(
                 (buf, recipe) -> {
                     buf.writeUtf(recipe.group);
-                    buf.writeEnum(recipe.category);
+                    buf.writeUtf(recipe.category != null ? recipe.category.toString() : "");
                     ShapedRecipePattern.STREAM_CODEC.encode(buf, recipe.pattern);
                     ItemStack.STREAM_CODEC.encode(buf, recipe.output);
                     buf.writeVarInt(recipe.cookTime);
                 },
                 buf -> {
                     String group = buf.readUtf();
-                    BakingBookCategory category = buf.readEnum(BakingBookCategory.class);
+                    BakingBookCategory category = BakingBookCategory.findByName(buf.readUtf());
                     ShapedRecipePattern pattern = ShapedRecipePattern.STREAM_CODEC.decode(buf);
                     ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
                     int cookTime = buf.readVarInt();

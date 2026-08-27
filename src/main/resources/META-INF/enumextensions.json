@@ -1,0 +1,55 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/world/inventory/RecipeBookType",
+      "name": "BOS_CORE_BAKING",
+      "constructor": "()V",
+      "parameters": []
+    },
+    {
+      "enum": "net/minecraft/client/RecipeBookCategories",
+      "name": "BOS_CORE_BAKING_SEARCH",
+      "constructor": "(Ljava/util/function/Supplier;)V",
+      "parameters": {
+        "class": "com/x29naybla/bos_core/common/EnumParameters",
+        "field": "PROXY_BAKING_SEARCH"
+      }
+    },
+    {
+      "enum": "net/minecraft/client/RecipeBookCategories",
+      "name": "BOS_CORE_BAKING_FOOD",
+      "constructor": "(Ljava/util/function/Supplier;)V",
+      "parameters": {
+        "class": "com/x29naybla/bos_core/common/EnumParameters",
+        "field": "PROXY_BAKING_FOOD"
+      }
+    },
+    {
+      "enum": "net/minecraft/client/RecipeBookCategories",
+      "name": "BOS_CORE_BAKING_METALLURGY",
+      "constructor": "(Ljava/util/function/Supplier;)V",
+      "parameters": {
+        "class": "com/x29naybla/bos_core/common/EnumParameters",
+        "field": "PROXY_BAKING_METALLURGY"
+      }
+    },
+    {
+      "enum": "net/minecraft/client/RecipeBookCategories",
+      "name": "BOS_CORE_BAKING_POTTERY",
+      "constructor": "(Ljava/util/function/Supplier;)V",
+      "parameters": {
+        "class": "com/x29naybla/bos_core/common/EnumParameters",
+        "field": "PROXY_BAKING_POTTERY"
+      }
+    },
+    {
+      "enum": "net/minecraft/client/RecipeBookCategories",
+      "name": "BOS_CORE_BAKING_MISC",
+      "constructor": "(Ljava/util/function/Supplier;)V",
+      "parameters": {
+        "class": "com/x29naybla/bos_core/common/EnumParameters",
+        "field": "PROXY_BAKING_MISC"
+      }
+    }
+  ]
+}

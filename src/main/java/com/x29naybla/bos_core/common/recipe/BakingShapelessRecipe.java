@@ -3,6 +3,7 @@ package com.x29naybla.bos_core.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.x29naybla.bos_core.client.recipe_book.BakingBookCategory;
 import com.x29naybla.bos_core.common.registry.BoSRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -91,7 +92,7 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
         private static final StreamCodec<RegistryFriendlyByteBuf, BakingShapelessRecipe> STREAM_CODEC = StreamCodec.of(
                 (buf, recipe) -> {
                     buf.writeUtf(recipe.group);
-                    buf.writeEnum(recipe.category);
+                    buf.writeUtf(recipe.category != null ? recipe.category.toString() : "");
                     ItemStack.STREAM_CODEC.encode(buf, recipe.output);
                     buf.writeVarInt(recipe.recipeItems.size());
                     for (Ingredient ing : recipe.recipeItems) {
@@ -101,7 +102,7 @@ public class BakingShapelessRecipe extends AbstractBakingRecipe {
                 },
                 buf -> {
                     String group = buf.readUtf();
-                    BakingBookCategory category = buf.readEnum(BakingBookCategory.class);
+                    BakingBookCategory category =  BakingBookCategory.findByName(buf.readUtf());
                     ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
                     int size = buf.readVarInt();
                     NonNullList<Ingredient> ingredients = NonNullList.withSize(size, Ingredient.EMPTY);

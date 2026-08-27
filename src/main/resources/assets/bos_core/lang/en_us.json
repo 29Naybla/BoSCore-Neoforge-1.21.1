@@ -18,5 +18,6 @@
 
   "item.bos_core.apple_seeds": "Apple Seeds",
 
-  "container.oven": "Oven"
+  "container.oven": "Oven",
+  "recipe_book.bakeable": "Showing Bakeable"
 }

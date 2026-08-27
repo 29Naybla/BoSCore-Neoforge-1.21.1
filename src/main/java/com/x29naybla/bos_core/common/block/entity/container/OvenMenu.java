@@ -1,26 +1,32 @@
 package com.x29naybla.bos_core.common.block.entity.container;
 
 import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
+import com.x29naybla.bos_core.common.recipe.AbstractBakingRecipe;
 import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import com.x29naybla.bos_core.common.registry.BoSMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class OvenMenu extends AbstractContainerMenu {
+public class OvenMenu extends RecipeBookMenu<RecipeWrapper, AbstractBakingRecipe> {
     public final OvenBlockEntity blockEntity;
     private final ContainerData data;
+    protected final Level level;
     public final ItemStackHandler inventory;
     private final ContainerLevelAccess canInteractWithCallable;
 
@@ -32,6 +38,7 @@ public class OvenMenu extends AbstractContainerMenu {
         super(BoSMenuTypes.OVEN_MENU.get(), containerId);
         this.blockEntity = ((OvenBlockEntity) blockEntity);
         this.data = data;
+        this.level = inv.player.level();
         this.inventory = ((OvenBlockEntity) blockEntity).inventory;
         assert blockEntity.getLevel() != null;
         this.canInteractWithCallable = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
@@ -151,5 +158,54 @@ public class OvenMenu extends AbstractContainerMenu {
         for (int i = 0; i< 9; i++) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(@NotNull StackedContents itemHelper) {
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            itemHelper.accountSimpleStack(inventory.getStackInSlot(i));
+        }
+    }
+
+    @Override
+    public void clearCraftingContent() {
+        for (int i = 0; i < 9; i++) {
+            this.inventory.setStackInSlot(i, ItemStack.EMPTY);
+        }
+    }
+
+    @Override
+    public boolean recipeMatches(RecipeHolder<AbstractBakingRecipe> recipe) {
+        return recipe.value().matches(new RecipeWrapper(inventory), level);
+    }
+
+    @Override
+    public int getResultSlotIndex() {
+        return 11;
+    }
+
+    @Override
+    public int getGridWidth() {
+        return 3;
+    }
+
+    @Override
+    public int getGridHeight() {
+        return 3;
+    }
+
+    @Override
+    public int getSize() {
+        return 11;
+    }
+
+    @Override
+    public @NotNull RecipeBookType getRecipeBookType() {
+        return RecipeBookType.valueOf("BOS_CORE_BAKING");
+    }
+
+    @Override
+    public boolean shouldMoveToInventory(int slotIndex) {
+        return slotIndex < (getGridWidth() * getGridHeight());
     }
 }
