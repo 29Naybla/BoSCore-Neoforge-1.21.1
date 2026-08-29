@@ -1,11 +1,13 @@
 package com.x29naybla.bos_core.common.block.entity;
 
 import com.google.common.collect.Lists;
+import com.x29naybla.bos_core.BoSCore;
 import com.x29naybla.bos_core.common.block.entity.container.OvenMenu;
 import com.x29naybla.bos_core.common.block.OvenBlock;
+import com.x29naybla.bos_core.common.block.entity.inventory.OvenItemHandler;
 import com.x29naybla.bos_core.common.recipe.AbstractBakingRecipe;
 import com.x29naybla.bos_core.common.registry.BoSBlockEntities;
-import com.x29naybla.bos_core.common.registry.BoSRecipes;
+import com.x29naybla.bos_core.common.registry.BoSRecipeTypes;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -39,6 +41,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -50,11 +57,14 @@ import java.util.Optional;
 import static com.x29naybla.bos_core.common.block.OvenBlock.LIT;
 import static net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.isFuel;
 
+@EventBusSubscriber(modid = BoSCore.MODID)
 public class OvenBlockEntity extends BlockEntity implements MenuProvider, WorldlyContainer, Nameable, RecipeCraftingHolder, StackedContentsCompatible, Clearable {
     private static final int[] INGREDIENT_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
     private static final int FUEL_SLOT = 9;
     private static final int OUTPUT_SLOT = 10;
     public final ItemStackHandler inventory;
+    private final IItemHandler inputHandler;
+    private final IItemHandler outputHandler;
     private int bakingProgress = 0;
     private int bakingTotalTime = 72;
     private int litTime = 0;
@@ -68,8 +78,10 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
     public OvenBlockEntity(BlockPos pos, BlockState blockState) {
         super(BoSBlockEntities.OVEN.get(), pos, blockState);
         this.inventory = createHandler(this);
+        this.inputHandler = new OvenItemHandler(inventory, Direction.UP);
+        this.outputHandler = new OvenItemHandler(inventory, Direction.DOWN);
         this.usedRecipeTracker = new Object2IntOpenHashMap<>();
-        this.quickCheck = RecipeManager.createCheck(BoSRecipes.BAKING_TYPE.get());
+        this.quickCheck = RecipeManager.createCheck(BoSRecipeTypes.BAKING.get());
         containerData  = new ContainerData() {
             @Override
             public int get(int index) {
@@ -98,6 +110,21 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
             }
         };
     }
+
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                BoSBlockEntities.OVEN.get(),
+                (be, context) -> {
+                    if (context == Direction.UP) {
+                        return be.inputHandler;
+                    }
+                    return be.outputHandler;
+                }
+        );
+    }
+
 
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {

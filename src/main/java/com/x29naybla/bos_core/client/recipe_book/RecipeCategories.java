@@ -2,7 +2,7 @@ package com.x29naybla.bos_core.client.recipe_book;
 
 import com.google.common.collect.ImmutableList;
 import com.x29naybla.bos_core.common.recipe.AbstractBakingRecipe;
-import com.x29naybla.bos_core.common.registry.BoSRecipes;
+import com.x29naybla.bos_core.common.registry.BoSRecipeTypes;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.neoforged.neoforge.client.event.RegisterRecipeBookCategoriesEvent;
@@ -17,7 +17,7 @@ public class RecipeCategories {
     public static void init(RegisterRecipeBookCategoriesEvent event) {
         event.registerBookCategories(RecipeBookType.valueOf("BOS_CORE_BAKING"), ImmutableList.of(BAKING_SEARCH, BAKING_FOOD, BAKING_METALLURGY, BAKING_POTTERY, BAKING_MISC));
         event.registerAggregateCategory(BAKING_SEARCH, ImmutableList.of(BAKING_FOOD, BAKING_METALLURGY, BAKING_POTTERY, BAKING_MISC));
-        event.registerRecipeCategoryFinder(BoSRecipes.BAKING_TYPE.get(), recipe ->
+        event.registerRecipeCategoryFinder(BoSRecipeTypes.BAKING.get(), recipe ->
         {
             if (recipe.value() instanceof AbstractBakingRecipe bakingRecipe) {
                 BakingBookCategory tab = bakingRecipe.getCategory();

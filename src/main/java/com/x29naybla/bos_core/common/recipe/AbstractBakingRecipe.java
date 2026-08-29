@@ -1,6 +1,7 @@
 package com.x29naybla.bos_core.common.recipe;
 
 import com.x29naybla.bos_core.client.recipe_book.BakingBookCategory;
+import com.x29naybla.bos_core.common.registry.BoSBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
@@ -15,15 +16,17 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractBakingRecipe implements Recipe<RecipeWrapper> {
     protected final String group;
     protected final BakingBookCategory category;
-    private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
+    private final ItemStack output;
+    private final float experience;
     private final int cookTime;
 
-    public AbstractBakingRecipe(String group, @Nullable BakingBookCategory category, ItemStack output, NonNullList<Ingredient> recipeItems, int cookTime) {
+    public AbstractBakingRecipe(String group, @Nullable BakingBookCategory category, NonNullList<Ingredient> recipeItems, ItemStack output, float experience, int cookTime) {
         this.group = group;
         this.category = category;
-        this.output = output;
         this.recipeItems = recipeItems;
+        this.output = output;
+        this.experience = experience;
         this.cookTime = cookTime;
     }
 
@@ -32,8 +35,23 @@ public abstract class AbstractBakingRecipe implements Recipe<RecipeWrapper> {
         return this.group;
     }
 
+    @Nullable
     public BakingBookCategory getCategory() {
         return this.category;
+    }
+
+    @Override
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        return this.recipeItems;
+    }
+
+    @Override
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
+        return this.output;
+    }
+
+    public float getExperience() {
+        return this.experience;
     }
 
     public int getCookTime() {
@@ -53,16 +71,7 @@ public abstract class AbstractBakingRecipe implements Recipe<RecipeWrapper> {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
-        return output.copy();
-    }
-
-    public ItemStack getOutput() {
-        return output;
-    }
-
-    @Override
-    public @NotNull NonNullList<Ingredient> getIngredients() {
-        return recipeItems;
+    public @NotNull ItemStack getToastSymbol() {
+        return new ItemStack(BoSBlocks.OVEN.get());
     }
 }

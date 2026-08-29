@@ -39,6 +39,7 @@ public class OvenScreen extends AbstractContainerScreen<OvenMenu> implements Rec
             button.setPosition(this.leftPos + 5, this.height / 2 - 49);
         }));
         this.addWidget(this.recipeBookComponent);
+        this.setInitialFocus(this.recipeBookComponent);
         this.titleLabelX = 29;
     }
 
@@ -81,8 +82,9 @@ public class OvenScreen extends AbstractContainerScreen<OvenMenu> implements Rec
         } else {
             super.render(guiGraphics, mouseX, mouseY, partialTick);
             this.recipeBookComponent.render(guiGraphics, mouseX, mouseY, partialTick);
-            this.recipeBookComponent.renderGhostRecipe(guiGraphics, this.leftPos, this.topPos, true, partialTick);
+            this.recipeBookComponent.renderGhostRecipe(guiGraphics, this.leftPos, this.topPos, false, partialTick);
         }
+        this.recipeBookComponent.renderTooltip(guiGraphics, this.leftPos, this.topPos, mouseX, mouseY);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 

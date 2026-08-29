@@ -1,6 +1,6 @@
 package com.x29naybla.bos_core.common.recipe;
 
-import com.x29naybla.bos_core.common.registry.BoSRecipes;
+import com.x29naybla.bos_core.common.registry.BoSRecipeSerializers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.DyeItem;
@@ -84,6 +84,6 @@ public class DyeNameTagRecipe extends CustomRecipe {
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return BoSRecipes.DYE_NAME_TAG.get();
+        return BoSRecipeSerializers.DYE_NAME_TAG.get();
     }
 }

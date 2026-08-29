@@ -63,7 +63,7 @@ public class OvenBlock extends BaseEntityBlock {
     public void animateTick(BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource randomSource) {
         if (state.getValue(LIT)) {
             double x = (double) pos.getX() + (double) 0.5F;
-            double y = pos.getY();
+            double y = pos.getY() + 0.2F;
             double z = (double) pos.getZ() + (double) 0.5F;
             if (randomSource.nextInt(10) == 0) {
                 level.playLocalSound((double) pos.getX() + (double) 0.5F, (double) pos.getY() + (double) 0.5F, (double) pos.getZ() + (double) 0.5F, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 0.5F + randomSource.nextFloat(), randomSource.nextFloat() * 0.7F + 0.6F, false);
