@@ -16,8 +16,8 @@ public abstract class BedBlockMixin extends Block {
     }
 
     /**
-     * @author
-     * @reason
+     * @author 29Naybla
+     * @reason giving beds a block renderer
      */
     @Overwrite
     @Override

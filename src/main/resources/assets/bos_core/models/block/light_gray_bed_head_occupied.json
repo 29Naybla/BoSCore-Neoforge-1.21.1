@@ -1,0 +1,6 @@
+{
+  "parent": "bos_core:block/bed_head_occupied",
+  "textures": {
+    "texture": "bos_core:block/light_gray_bed"
+  }
+}

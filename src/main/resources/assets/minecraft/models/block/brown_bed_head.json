@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/bed_head",
-  "textures": {
-    "texture": "minecraft:block/brown_bed"
-  }
-}

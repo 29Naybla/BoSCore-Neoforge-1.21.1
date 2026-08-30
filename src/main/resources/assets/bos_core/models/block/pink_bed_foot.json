@@ -1,0 +1,6 @@
+{
+  "parent": "bos_core:block/bed_foot",
+  "textures": {
+    "texture": "bos_core:block/pink_bed"
+  }
+}
