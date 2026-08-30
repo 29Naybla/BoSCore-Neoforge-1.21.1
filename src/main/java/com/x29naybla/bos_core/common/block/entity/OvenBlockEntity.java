@@ -33,7 +33,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -469,8 +468,10 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
 
         for (Object2IntMap.Entry<ResourceLocation> entry : usedRecipeTracker.object2IntEntrySet()) {
             level.getRecipeManager().byKey(entry.getKey()).ifPresent((recipe) -> {
-                list.add(recipe);
-                splitAndSpawnExperience((ServerLevel) level, pos, entry.getIntValue(), ((AbstractCookingRecipe) recipe.value()).getExperience());
+                if (recipe.value() instanceof AbstractBakingRecipe bakingRecipe) {
+                    list.add(recipe);
+                    splitAndSpawnExperience((ServerLevel) level, pos, entry.getIntValue(), bakingRecipe.getExperience());
+                }
             });
         }
 
@@ -543,11 +544,6 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
-                assert level != null;
-                if (slot < 9) {
-                    ovenBlockEntity.bakingProgress = 0;
-                    ovenBlockEntity.bakingTotalTime = 72;
-                }
             }
         };
     }
