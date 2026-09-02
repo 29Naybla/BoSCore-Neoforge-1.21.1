@@ -51,6 +51,8 @@ public class BoSEvents {
                 turnIntoPath(event.getEntity(), BoSBlocks.MUD_PATH.get().defaultBlockState(), event.getLevel(), event.getPos());
             } else if (state.is(Blocks.GRAVEL)) {
                 turnIntoPath(event.getEntity(),  BoSBlocks.GRAVEL_PATH.get().defaultBlockState(), event.getLevel(), event.getPos());
+            } else if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.PODZOL)) {
+                turnIntoPath(event.getEntity(), BoSBlocks.GRASS_PATH.get().defaultBlockState(), event.getLevel(), event.getPos());
             }
         }
     }
@@ -66,7 +68,8 @@ public class BoSEvents {
 
     @SubscribeEvent
     public static void pieStacksToOne(ModifyDefaultComponentsEvent event) {
-        event.modify((Items.PUMPKIN_PIE), (builder) -> builder.set(DataComponents.MAX_STACK_SIZE, 1));
+        event.modify(Items.PUMPKIN_PIE, (builder) -> builder.set(DataComponents.MAX_STACK_SIZE, 1));
+        event.modify(Items.PUMPKIN_PIE, (builder) -> builder.remove(DataComponents.FOOD));
     }
 
     @SubscribeEvent
@@ -113,11 +116,14 @@ public class BoSEvents {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.insertAfter(Blocks.CHERRY_LOG.asItem().getDefaultInstance(), BoSBlocks.APPLE_LOG.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS){
+            event.remove(Blocks.DIRT_PATH.asItem().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.SAND.asItem().getDefaultInstance(), BoSBlocks.SAND_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.RED_SAND.asItem().getDefaultInstance(), BoSBlocks.RED_SAND_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.SNOW_BLOCK.asItem().getDefaultInstance(), BoSBlocks.SNOW_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.MUD.asItem().getDefaultInstance(), BoSBlocks.MUD_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.GRAVEL.asItem().getDefaultInstance(), BoSBlocks.GRAVEL_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(Blocks.MYCELIUM.asItem().getDefaultInstance(), BoSBlocks.GRASS_PATH.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(Blocks.DIRT.asItem().getDefaultInstance(), Blocks.DIRT_PATH.asItem().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.CHERRY_LOG.asItem().getDefaultInstance(), BoSBlocks.APPLE_LOG.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(Blocks.CHERRY_LEAVES.asItem().getDefaultInstance(), BoSBlocks.APPLE_LEAVES.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             event.insertAfter(BoSBlocks.APPLE_LEAVES.toStack(), BoSBlocks.FLOWERING_APPLE_LEAVES.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);

@@ -1,6 +1,7 @@
 package com.x29naybla.bos_core.common.block.entity.container;
 
 import com.x29naybla.bos_core.common.block.entity.OvenBlockEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -51,8 +52,8 @@ public class BoSResultSlot extends SlotItemHandler {
     protected void checkTakeAchievements(ItemStack stack) {
         stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
 
-        if (!this.player.level().isClientSide) {
-            ovenBlockEntity.awardUsedRecipes(this.player, ovenBlockEntity.getDroppableInventory());
+        if (this.player instanceof ServerPlayer serverplayer && this.container instanceof OvenBlockEntity) {
+            ovenBlockEntity.awardUsedRecipesAndPopExperience(serverplayer);
         }
 
         this.removeCount = 0;
