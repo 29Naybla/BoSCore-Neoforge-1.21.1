@@ -121,7 +121,7 @@ public class OvenMenu extends RecipeBookMenu<RecipeWrapper, AbstractBakingRecipe
             if(!moveItemStackTo(sourceStack, 0, 36, true)) {
                 return ItemStack.EMPTY;
             }
-            sourceSlot.onQuickCraft(sourceStack, copyOfSourceStack);
+            copyOfSourceStack.onCraftedBy(player.level(), player, copyOfSourceStack.getCount());
         } else if (index < 36+11) {
             //this is BE inv
             if(!moveItemStackTo(sourceStack, 0, 36, false)) {
