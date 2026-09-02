@@ -8,6 +8,7 @@
     "CatMixin",
     "CowMixin",
     "CustomNameVisibleMixin",
+    "DirtPathBlockMixin",
     "NameTagItemMixin",
     "NoiseChunkGeneratorMixin",
     "OcelotMixin",

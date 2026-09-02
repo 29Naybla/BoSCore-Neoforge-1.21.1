@@ -33,7 +33,7 @@ public class BoSBlocks {
     public static final DeferredBlock<Block> GRAVEL_PATH = registerBlock("gravel_path",
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL), Blocks.GRAVEL.defaultBlockState()));
     public static final DeferredBlock<Block> GRASS_PATH = registerBlock("grass_path",
-            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK), Blocks.GRASS_BLOCK.defaultBlockState()));
+            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK), Blocks.DIRT.defaultBlockState()));
 
     public static final DeferredBlock<Block> PUMPKIN_PIE = BLOCKS.register("pumpkin_pie",
             () -> new PumpkinPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
