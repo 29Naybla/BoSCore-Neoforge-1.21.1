@@ -1,5 +1,6 @@
 {
   "values": [
+    "minecraft:dirt_path",
     "bos_core:sand_path",
     "bos_core:red_sand_path",
     "bos_core:snow_path",

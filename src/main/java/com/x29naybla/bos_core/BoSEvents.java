@@ -51,7 +51,7 @@ public class BoSEvents {
                 turnIntoPath(event.getEntity(), BoSBlocks.MUD_PATH.get().defaultBlockState(), event.getLevel(), event.getPos());
             } else if (state.is(Blocks.GRAVEL)) {
                 turnIntoPath(event.getEntity(),  BoSBlocks.GRAVEL_PATH.get().defaultBlockState(), event.getLevel(), event.getPos());
-            } else if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.PODZOL)) {
+            } else if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.PODZOL) || state.is(Blocks.MYCELIUM)) {
                 turnIntoPath(event.getEntity(), BoSBlocks.GRASS_PATH.get().defaultBlockState(), event.getLevel(), event.getPos());
             }
         }
