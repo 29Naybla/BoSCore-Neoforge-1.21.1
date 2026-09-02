@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -50,6 +51,7 @@ import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -458,19 +460,32 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
 
     @Override
     public void awardUsedRecipes(Player player, @NotNull List<ItemStack> items) {
-        List<RecipeHolder<?>> usedRecipes = getUsedRecipesAndPopExperience(player.level(), player.position());
+        List<RecipeHolder<?>> usedRecipes = getRecipesToAwardAndPopExperience((ServerLevel) player.level(), player.position());
         player.awardRecipes(usedRecipes);
         usedRecipeTracker.clear();
     }
 
-    public List<RecipeHolder<?>> getUsedRecipesAndPopExperience(Level level, Vec3 pos) {
+    public void awardUsedRecipesAndPopExperience(ServerPlayer player) {
+        List<RecipeHolder<?>> list = this.getRecipesToAwardAndPopExperience(player.serverLevel(), player.position());
+        player.awardRecipes(list);
+
+        for (RecipeHolder<?> recipeholder : list) {
+            if (recipeholder != null) {
+                player.triggerRecipeCrafted(recipeholder, Collections.singletonList(this.inventory.getStackInSlot(OUTPUT_SLOT)));
+            }
+        }
+
+        this.usedRecipeTracker.clear();
+    }
+
+    public List<RecipeHolder<?>> getRecipesToAwardAndPopExperience(ServerLevel level, Vec3 pos) {
         List<RecipeHolder<?>> list = Lists.newArrayList();
 
         for (Object2IntMap.Entry<ResourceLocation> entry : usedRecipeTracker.object2IntEntrySet()) {
             level.getRecipeManager().byKey(entry.getKey()).ifPresent((recipe) -> {
                 if (recipe.value() instanceof AbstractBakingRecipe bakingRecipe) {
                     list.add(recipe);
-                    splitAndSpawnExperience((ServerLevel) level, pos, entry.getIntValue(), bakingRecipe.getExperience());
+                    createExperience(level, pos, entry.getIntValue(), bakingRecipe.getExperience());
                 }
             });
         }
@@ -478,7 +493,7 @@ public class OvenBlockEntity extends BlockEntity implements MenuProvider, Worldl
         return list;
     }
 
-    private static void splitAndSpawnExperience(ServerLevel level, Vec3 pos, int craftedAmount, float experience) {
+    private static void createExperience(ServerLevel level, Vec3 pos, int craftedAmount, float experience) {
         int expTotal = Mth.floor((float) craftedAmount * experience);
         float expFraction = Mth.frac((float) craftedAmount * experience);
         if (expFraction != 0.0F && Math.random() < (double) expFraction) {

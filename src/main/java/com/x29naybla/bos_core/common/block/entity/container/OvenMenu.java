@@ -116,13 +116,13 @@ public class OvenMenu extends RecipeBookMenu<RecipeWrapper, AbstractBakingRecipe
             if(!moveItemStackTo(sourceStack, 36, 36+9, false)) {
                 return ItemStack.EMPTY;
             }
-        } else if (index == 36+11) {
+        } else if (index == 36+10) {
             //this is BE output slot
             if(!moveItemStackTo(sourceStack, 0, 36, true)) {
                 return ItemStack.EMPTY;
             }
             copyOfSourceStack.onCraftedBy(player.level(), player, copyOfSourceStack.getCount());
-        } else if (index < 36+11) {
+        } else if (index < 36+10) {
             //this is BE inv
             if(!moveItemStackTo(sourceStack, 0, 36, false)) {
                 return ItemStack.EMPTY;
@@ -181,7 +181,7 @@ public class OvenMenu extends RecipeBookMenu<RecipeWrapper, AbstractBakingRecipe
 
     @Override
     public int getResultSlotIndex() {
-        return 11;
+        return 10;
     }
 
     @Override
