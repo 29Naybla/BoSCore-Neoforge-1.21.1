@@ -14,6 +14,7 @@
     "OcelotMixin",
     "PumpkinPieItemMixin",
     "RabbitMixin",
+    "ShovelItemMixin",
     "WolfMixin"
   ],
   "injectors": {

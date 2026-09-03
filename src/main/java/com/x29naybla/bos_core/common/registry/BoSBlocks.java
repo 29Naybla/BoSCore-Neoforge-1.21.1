@@ -22,18 +22,18 @@ import java.util.function.Supplier;
 public class BoSBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(BoSCore.MODID);
 
+    public static final DeferredBlock<Block> GRASS_PATH = registerBlock("grass_path",
+            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK), Blocks.DIRT.defaultBlockState()));
+    public static final DeferredBlock<Block> MUD_PATH = registerBlock("mud_path",
+            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MUD), Blocks.MUD.defaultBlockState()));
+    public static final DeferredBlock<Block> GRAVEL_PATH = registerBlock("gravel_path",
+            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL), Blocks.GRAVEL.defaultBlockState()));
     public static final DeferredBlock<Block> SAND_PATH = registerBlock("sand_path",
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SAND), Blocks.SAND.defaultBlockState()));
     public static final DeferredBlock<Block> RED_SAND_PATH = registerBlock("red_sand_path",
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.RED_SAND), Blocks.RED_SAND.defaultBlockState()));
     public static final DeferredBlock<Block> SNOW_PATH = registerBlock("snow_path",
             () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SNOW_BLOCK), Blocks.SNOW_BLOCK.defaultBlockState()));
-    public static final DeferredBlock<Block> MUD_PATH = registerBlock("mud_path",
-            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MUD), Blocks.MUD.defaultBlockState()));
-    public static final DeferredBlock<Block> GRAVEL_PATH = registerBlock("gravel_path",
-            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL), Blocks.GRAVEL.defaultBlockState()));
-    public static final DeferredBlock<Block> GRASS_PATH = registerBlock("grass_path",
-            () -> new BoSPathBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK), Blocks.DIRT.defaultBlockState()));
 
     public static final DeferredBlock<Block> PUMPKIN_PIE = BLOCKS.register("pumpkin_pie",
             () -> new PumpkinPieBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)));
