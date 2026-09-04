@@ -12,12 +12,15 @@
     "C": {
       "item": "minecraft:wheat"
     },
+    "D": {
+      "item": "minecraft:sweet_berries"
+    },
     "E": {
       "item": "minecraft:egg"
     }
   },
   "pattern": [
-    "AAA",
+    "ADA",
     "BEB",
     "CCC"
   ],
